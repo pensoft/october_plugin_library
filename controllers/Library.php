@@ -1,6 +1,7 @@
 <?php namespace Pensoft\Library\Controllers;
 
 use Backend\Classes\Controller;
+use BackendMenu;
 
 class Library extends Controller
 {
@@ -12,5 +13,6 @@ class Library extends Controller
     public function __construct()
     {
         parent::__construct();
+        BackendMenu::setContext('Pensoft.Library', 'main-menu-item');
     }
 }
