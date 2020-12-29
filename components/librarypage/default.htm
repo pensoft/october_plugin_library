@@ -12,7 +12,6 @@
 
     <div id="libraryForm" class="ui form libraryForm">
         <div class="row">
-
             <div class="col-sm-3 col-xs">
                 <div class="field">
                     <select name="Filter[type]">
@@ -37,6 +36,6 @@
     </div>
 {{ form_close() }}
 
-<div id="partialLibraries">
+<div class='library-items' id="partialLibraries">
     {% partial __SELF__ ~ '::libraries' %}
 </div>
