@@ -14,6 +14,25 @@ class LibraryPage extends ComponentBase
         $this->prepareVars();
     }
 
+    public function defineProperties()
+    {
+        return [
+            'templates' => [
+                'title' => 'Select templates',
+                'type' => 'dropdown',
+                'default' => 'template2'
+            ],
+        ];
+    }
+
+    public function getTemplatesOptions()
+    {
+        return [
+            'template1' => 'Template 1',
+            'template2' => 'Template 2',
+        ];
+    }
+
     public function componentDetails()
     {
         return [
