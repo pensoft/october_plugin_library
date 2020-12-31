@@ -8,34 +8,38 @@
     </div>
 {%endif%}
 
-{{ form_ajax(__SELF__ ~ '::onFilterRecords', { update: {'@libraries': '#partialLibraries'} }) }}
+{% if __SELF__.hasLibrary() %}
+    {{ form_ajax(__SELF__ ~ '::onFilterRecords', { update: {'@libraries': '#partialLibraries'} }) }}
 
-    <div id="libraryForm" class="ui form libraryForm">
-        <div class="row">
-            <div class="col-sm-3 col-xs">
-                <div class="field">
-                    <select name="Filter[type]">
-                        <option selected>All types of documents</option>
-                        {% for code,option in sortTypesOptions %}
+        <div id="libraryForm" class="ui form libraryForm">
+            <div class="row">
+                <div class="col-sm-3 col-xs">
+                    <div class="field">
+                        <select name="Filter[type]">
+                            <option selected>All types of documents</option>
+                            {% for code,option in sortTypesOptions %}
+                                <option value="{{code}}">{{option}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs">
+                    <div class="field">
+                        <select name="Filter[sort]">
+                            {% for code,option in sortOptions %}
                             <option value="{{code}}">{{option}}</option>
-                        {% endfor %}
-                    </select>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-2 col-xs">
-                <div class="field">
-                    <select name="Filter[sort]">
-                        {% for code,option in sortOptions %}
-                        <option value="{{code}}">{{option}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
+            
         </div>
-        
-    </div>
-{{ form_close() }}
+    {{ form_close() }}
 
-<div class='library-items' id="partialLibraries">
-    {% partial __SELF__ ~ '::libraries' %}
-</div>
+    <div class='library-items' id="partialLibraries">
+        {% partial __SELF__ ~ '::libraries' %}
+    </div>
+{% else %}
+    <div>Library is empty</div>
+{% endif %}

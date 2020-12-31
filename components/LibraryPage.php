@@ -72,4 +72,8 @@ class LibraryPage extends ComponentBase
         readfile($zip);
         exit;
     }
+
+    public function hasLibrary(){
+        return Library::exists();
+    }
 }
