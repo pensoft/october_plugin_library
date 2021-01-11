@@ -41,5 +41,5 @@
         {% partial __SELF__ ~ '::libraries' %}
     </div>
 {% else %}
-    <div>Library is empty</div>
+    <div>{{ this.theme.config.name | upper }} publications will be available soon.</div>
 {% endif %}
