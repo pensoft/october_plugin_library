@@ -5,3 +5,5 @@
     - builder_table_create_pensoft_library_records.php
 1.0.3:
     - 'New message when no documents are added'
+1.0.4:
+    - 'Publication year'

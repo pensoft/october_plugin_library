@@ -6,7 +6,7 @@
 		<div class="body">
 			{% partial __SELF__ ~ "::libraries-content" label="Authors:" value=record.authors %}
 			{% partial __SELF__ ~ "::libraries-content" label="Status:" value=record.status_attr %}
-			{% partial __SELF__ ~ "::libraries-content" label="Year:" value=record.year_attr %}
+			{% partial __SELF__ ~ "::libraries-content" label="Year:" value=(record.year|date("Y")) %}
 
 			{% partial __SELF__ ~ "::libraries-content" label="Journal:" value=record.journal_title %}
 			{% partial __SELF__ ~ "::libraries-content" label="Proceedings:" value=record.proceedings_title %}

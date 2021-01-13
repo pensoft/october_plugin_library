@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Model;
+use Config;
 
 /**
  * Model
@@ -37,7 +38,7 @@ class Library extends Model
     public static $allowSortTypesOptions = [
 		self::SORT_TYPE_DELIVERABLES => 'Deliverables',
 		self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
-		self::SORT_TYPE_PROJECT_PUBLICATIONS => 'MAIA Publications',
+		self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Project Publications',
     ];
 
     /**
