@@ -5,3 +5,9 @@
     - builder_table_create_pensoft_library_records.php
 1.0.3:
     - 'New message when no documents are added'
+1.0.4:
+    - 'Publication year'
+1.0.5:
+    - 'Publication year and sort options'
+1.0.6:
+    - 'New template'

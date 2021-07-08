@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Model;
+use Cms\Classes\Theme;
 
 /**
  * Model
@@ -37,8 +38,19 @@ class Library extends Model
     public static $allowSortTypesOptions = [
 		self::SORT_TYPE_DELIVERABLES => 'Deliverables',
 		self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
-		self::SORT_TYPE_PROJECT_PUBLICATIONS => 'MAIA Publications',
+		self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
     ];
+
+    public function getSortTypesOptions(){
+		$activeTheme = Theme::getActiveTheme();
+		$theme = $activeTheme->getConfig();
+        return
+        [
+            self::SORT_TYPE_DELIVERABLES => 'Deliverables',
+            self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
+            self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
+        ];
+    }
 
     /**
      * @var string The database table used by the model.
@@ -66,9 +78,9 @@ class Library extends Model
         return (new Carbon($value))->englishMonth;
     }
 
-    public function getYearAttrAttribute($value)
+    public function getYearAttrAttribute()
     {
-        return (new Carbon($value))->year;
+        return (new Carbon($this->year))->year;
     }
 
     public function getStatusAttrAttribute()

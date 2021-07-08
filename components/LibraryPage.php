@@ -30,6 +30,7 @@ class LibraryPage extends ComponentBase
         return [
             'template1' => 'Template 1',
             'template2' => 'Template 2',
+            'template3' => 'Template 3',
         ];
     }
 
@@ -47,7 +48,7 @@ class LibraryPage extends ComponentBase
         $library = Library::isVisible()->listFrontEnd($options);
         $this->page['records'] = $library->get();
         $this->page['sortOptions'] = Library::$allowSortingOptions;
-        $this->page['sortTypesOptions'] = Library::$allowSortTypesOptions;
+        $this->page['sortTypesOptions'] = (new Library())->getSortTypesOptions();
         $this->page['total_file_size_bites'] = $this->page['records']->reduce(function ($carry, $item) {
             if ($item->file) {
                 return $carry + $item->file->file_size;
