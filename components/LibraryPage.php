@@ -22,6 +22,11 @@ class LibraryPage extends ComponentBase
                 'type' => 'dropdown',
                 'default' => 'template2'
             ],
+            'has_search' => [
+                'title' => 'Display search in documents form',
+                'type' => 'checkbox',
+                'default' => false
+            ],
         ];
     }
 
@@ -45,7 +50,17 @@ class LibraryPage extends ComponentBase
     public function prepareVars()
     {
         $options = post('Filter', []);
+
         $library = Library::isVisible()->listFrontEnd($options);
+
+		if($query = get('query')){
+			$library = $library->where('title', 'iLIKE', '%' . $query . '%')
+				->orwhere('authors', 'iLIKE', '%' . $query . '%')
+				->orwhere('journal_title', 'iLIKE', '%' . $query . '%')
+				->orwhere('publisher', 'iLIKE', '%' . $query . '%')
+			;
+		}
+
         $this->page['records'] = $library->get();
         $this->page['sortOptions'] = Library::$allowSortingOptions;
         $this->page['sortTypesOptions'] = (new Library())->getSortTypesOptions();
