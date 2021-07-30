@@ -27,6 +27,11 @@ class LibraryPage extends ComponentBase
                 'type' => 'checkbox',
                 'default' => false
             ],
+			'no_records_message' => [
+				'title' => 'No records message',
+				'description' => 'Message to be displeyed when no listems are added',
+				'default' => 'No records found',
+			],
         ];
     }
 

@@ -50,5 +50,5 @@
         {% partial __SELF__ ~ '::libraries' %}
     </div>
 {% else %}
-    <div>{{ this.theme.config.name | upper }} publications will be available soon.</div>
+    <div class="no-records">{{ __SELF__.property('no_records_message') }}</div>
 {% endif %}
