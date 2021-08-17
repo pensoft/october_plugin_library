@@ -71,6 +71,7 @@ class Library extends Model
 		'status_attr',
 		'derived_attr',
 		'year_attr',
+		'date_attr',
 	];
 
     public function getDueDateAttribute($value)
@@ -81,6 +82,11 @@ class Library extends Model
     public function getYearAttrAttribute()
     {
         return (new Carbon($this->year))->year;
+    }
+
+    public function getDateAttrAttribute()
+    {
+        return (new Carbon($this->year))->day . ' ' . (new Carbon($this->year))->monthName .' '. (new Carbon($this->year))->year;
     }
 
     public function getStatusAttrAttribute()

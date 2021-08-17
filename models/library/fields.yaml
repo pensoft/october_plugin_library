@@ -162,7 +162,7 @@ fields:
         type: text
     preview:
         label: 'File preview'
-        mode: image
+        mode: file
         useCaption: true
         thumbOptions:
             mode: crop
