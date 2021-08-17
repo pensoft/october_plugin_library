@@ -22,6 +22,16 @@ class LibraryPage extends ComponentBase
                 'type' => 'dropdown',
                 'default' => 'template2'
             ],
+            'has_search' => [
+                'title' => 'Display search in documents form',
+                'type' => 'checkbox',
+                'default' => false
+            ],
+			'no_records_message' => [
+				'title' => 'No records message',
+				'description' => 'Message to be displeyed when no listems are added',
+				'default' => 'No records found',
+			],
         ];
     }
 
@@ -30,6 +40,7 @@ class LibraryPage extends ComponentBase
         return [
             'template1' => 'Template 1',
             'template2' => 'Template 2',
+            'template3' => 'Template 3',
         ];
     }
 
@@ -44,10 +55,20 @@ class LibraryPage extends ComponentBase
     public function prepareVars()
     {
         $options = post('Filter', []);
+
         $library = Library::isVisible()->listFrontEnd($options);
+
+		if($query = get('query')){
+			$library = $library->where('title', 'iLIKE', '%' . $query . '%')
+				->orwhere('authors', 'iLIKE', '%' . $query . '%')
+				->orwhere('journal_title', 'iLIKE', '%' . $query . '%')
+				->orwhere('publisher', 'iLIKE', '%' . $query . '%')
+			;
+		}
+
         $this->page['records'] = $library->get();
         $this->page['sortOptions'] = Library::$allowSortingOptions;
-        $this->page['sortTypesOptions'] = Library::$allowSortTypesOptions;
+        $this->page['sortTypesOptions'] = (new Library())->getSortTypesOptions();
         $this->page['total_file_size_bites'] = $this->page['records']->reduce(function ($carry, $item) {
             if ($item->file) {
                 return $carry + $item->file->file_size;

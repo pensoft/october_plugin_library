@@ -37,9 +37,18 @@
         </div>
     {{ form_close() }}
 
+	{% if __SELF__.property('has_search') %}
+	<div id="searchLibrary" class="searchLibrary">
+		<form class="input-group align-items-start" action="" method="get">
+			<input class="form-control search" name="query" type="text" autocomplete="on" placeholder="Search in documents">
+			<button class="btn searchLibrary btn-link text-grey-search-btn" type="submit"></button>
+		</form>
+	</div>
+	{% endif %}
+
     <div class='library-items' id="partialLibraries">
         {% partial __SELF__ ~ '::libraries' %}
     </div>
 {% else %}
-    <div>{{ this.theme.config.name | upper }} publications will be available soon.</div>
+    <div class="no-records">{{ __SELF__.property('no_records_message') }}</div>
 {% endif %}
