@@ -13,6 +13,9 @@ fields:
             4: Book
             5: Deliverable
             6: Report
+            7: Video
+            8: Presentation
+            9: Other
         showSearch: true
         span: auto
         default: '1'
