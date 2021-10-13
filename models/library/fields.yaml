@@ -16,6 +16,7 @@ fields:
             7: Video
             8: Presentation
             9: Other
+            10: Pledges
         showSearch: true
         span: auto
         default: '1'
