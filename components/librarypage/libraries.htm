@@ -1,6 +1,8 @@
 {% for record in records %}
 {% partial __SELF__ ~ "::templates/" ~ __SELF__.property('templates') record=record %}
-
+{% if __SELF__.loggedIn %}
+<p><a class="edit-link" href="/admin/pensoft/library/library/update/{{record.id}}" target="_blank">Edit</a></p>
+{% endif %}
 
 
 {% endfor %}

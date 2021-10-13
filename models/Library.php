@@ -71,6 +71,7 @@ class Library extends Model
 		'status_attr',
 		'derived_attr',
 		'year_attr',
+		'type_attr',
 		'date_attr',
 	];
 
@@ -79,10 +80,37 @@ class Library extends Model
         return (new Carbon($value))->englishMonth;
     }
 
-    public function getYearAttrAttribute()
-    {
-        return (new Carbon($this->year))->year;
-    }
+	public function getYearAttrAttribute()
+	{
+		return (new Carbon($this->year))->year;
+	}
+
+
+
+	public function getTypeAttrAttribute()
+	{
+		switch ($this->type){
+			case self::TYPE_JOURNAL_PAPER:
+				return 'Journal paper';
+				break;
+			case self::TYPE_PROCEEDINGS_PAPER:
+				return 'Proceedings paper';
+				break;
+			case self::TYPE_BOOK_CHAPTER:
+				return 'Book chapter';
+				break;
+			case self::TYPE_BOOK:
+				return 'Book';
+				break;
+			case self::TYPE_DELIVERABLE:
+			default:
+				return 'Deliverable';
+				break;
+			case self::TYPE_REPORT:
+				return 'Report';
+				break;
+		}
+	}
 
     public function getDateAttrAttribute()
     {

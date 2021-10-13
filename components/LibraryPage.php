@@ -2,16 +2,26 @@
 
 namespace Pensoft\Library\Components;
 
+use Backend\Facades\BackendAuth;
 use \Cms\Classes\ComponentBase;
 use Pensoft\Library\Classes\ZipFiles;
 use Pensoft\Library\Models\Library;
 
 class LibraryPage extends ComponentBase
 {
+	public $loggedIn;
+
     public function onRun()
     {
         $this->addJs('assets/js/def.js');
         $this->prepareVars();
+
+		// by default users are not logged in
+		$this->loggedIn = false;
+		// end then if getUser returns other value than NULL then our user is logged in
+		if (!empty(BackendAuth::getUser())) {
+			$this->loggedIn = true;
+		}
     }
 
     public function defineProperties()
@@ -42,6 +52,7 @@ class LibraryPage extends ComponentBase
             'template2' => 'Template 2',
             'template3' => 'Template 3',
             'template4' => 'Template 4',
+            'template5' => 'Template 5',
         ];
     }
 
