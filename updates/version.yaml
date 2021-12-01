@@ -26,3 +26,5 @@
 1.0.13:
     - 'Updated table pensoft_library_records'
     - builder_table_update_pensoft_library_records.php
+1.0.14:
+    - 'Fixed template 4'
