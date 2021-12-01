@@ -23,3 +23,6 @@
     - 'New template 5 and edit link'
 1.0.12:
     - 'Fixed template 3'
+1.0.13:
+    - 'Updated table pensoft_library_records'
+    - builder_table_update_pensoft_library_records.php
