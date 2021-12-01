@@ -1,33 +1,44 @@
-<div class="library-item">
-	<div class="row">
-		<div class="col-xs-12 col-md-9">
-			<h3 class="card-title">{{ record.title }}</h3>
-			<div class="body">
-				{% partial __SELF__ ~ "::libraries-content" label="Authors:" value=record.authors %}<br>
+<div class="library-item row center-xs start-sm">
+	{% if record.preview %}
+	<div class="col-md-3 col-xs-12">
+		{% if record.preview.content_type == 'video/mp4' %}
+		<video controls="" width="100%"><source src="{{record.preview.path}}" type="video/mp4"></video>
+		{% else %}
+		<img src="{{record.preview.getThumb(193,250, { mode : 'crop' } )}}" class="{{record.file.getExtension()}}_preview">
+		{% endif %}
+	</div>
+	{% endif %}
 
-				{% partial __SELF__ ~ "::libraries-content" label="Status:" value=record.status_attr %}
-				{% partial __SELF__ ~ "::libraries-content" label="Year:" value=record.year_attr %}
 
-				{% partial __SELF__ ~ "::libraries-content" label="Journal:" value=record.journal_title %}
-				{% partial __SELF__ ~ "::libraries-content" label="Proceedings:" value=record.proceedings_title %}
-				{% partial __SELF__ ~ "::libraries-content" label="Monograph:" value=record.monograph_title %}
-				{% partial __SELF__ ~ "::libraries-content" label="Deliverable number:" value=record.deliverable_title %}
-				{% partial __SELF__ ~ "::libraries-content" label="Project:" value=record.project_title %}
-
-				{% partial __SELF__ ~ "::libraries-content" label="Volume/Issue:" value=record.volume_issue %}
-				{% partial __SELF__ ~ "::libraries-content" label="Publisher:" value=record.publisher  %}
-				{% partial __SELF__ ~ "::libraries-content" label="Place:" value=record.place  %}
-				{% partial __SELF__ ~ "::libraries-content" label="City:" value=record.city  %}
-				{% partial __SELF__ ~ "::libraries-content" label="Pages:" value=record.pages  %}
-				<br>{% partial __SELF__ ~ "::libraries-content" label="URL/DOI:" value=record.doi is_link=true  %}
+	<div class="col-md-9 col-xs-12 pl-1">
+		<div class="news-title row">
+			<div class="col-md-9 col-xs-12"><h3 class="card-title">{{ record.title }}</h3></div>
+			{%if record.file %}
+			<div class="col-md-3 col-xs-12">
+				<a target="_blank" href="{{record.file.path()}}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>Download</a>
 			</div>
-		</div>
+			{%endif%}
 
-		{%if record.file %}
-		<div class="col-xs-12 col-md-3 end-xs end-md">
-			<a target="_blank" href="{{record.file.path()}}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>Download ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
 		</div>
-		{%endif%}
+		<div class="body">
+			{% partial __SELF__ ~ "::libraries-content" label="Authors:" value=record.authors %}<br>
+
+			{% partial __SELF__ ~ "::libraries-content" label="Status:" value=record.status_attr %}
+			{% partial __SELF__ ~ "::libraries-content" label="Year:" value=record.year_attr %}
+
+			{% partial __SELF__ ~ "::libraries-content" label="Journal:" value=record.journal_title %}
+			{% partial __SELF__ ~ "::libraries-content" label="Proceedings:" value=record.proceedings_title %}
+			{% partial __SELF__ ~ "::libraries-content" label="Monograph:" value=record.monograph_title %}
+			{% partial __SELF__ ~ "::libraries-content" label="Deliverable number:" value=record.deliverable_title %}
+			{% partial __SELF__ ~ "::libraries-content" label="Project:" value=record.project_title %}
+
+			{% partial __SELF__ ~ "::libraries-content" label="Volume/Issue:" value=record.volume_issue %}
+			{% partial __SELF__ ~ "::libraries-content" label="Publisher:" value=record.publisher  %}
+			{% partial __SELF__ ~ "::libraries-content" label="Place:" value=record.place  %}
+			{% partial __SELF__ ~ "::libraries-content" label="City:" value=record.city  %}
+			{% partial __SELF__ ~ "::libraries-content" label="Pages:" value=record.pages  %}
+			<br>{% partial __SELF__ ~ "::libraries-content" label="URL/DOI:" value=record.doi is_link=true  %}
+		</div>
 	</div>
 
 </div>

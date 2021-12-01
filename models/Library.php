@@ -114,7 +114,7 @@ class Library extends Model
 
     public function getDateAttrAttribute()
     {
-        return (new Carbon($this->year))->day . ' ' . (new Carbon($this->year))->monthName .' '. (new Carbon($this->year))->year;
+        return (new Carbon($this->year))->day . ' ' . (new Carbon($this->year))->englishMonth .' '. (new Carbon($this->year))->year;
     }
 
     public function getStatusAttrAttribute()
