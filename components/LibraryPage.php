@@ -37,6 +37,11 @@ class LibraryPage extends ComponentBase
                 'type' => 'checkbox',
                 'default' => false
             ],
+            'add_file_name' => [
+                'title' => 'Add file name to open pdf link',
+                'type' => 'checkbox',
+                'default' => true
+            ],
 			'no_records_message' => [
 				'title' => 'No records message',
 				'description' => 'Message to be displeyed when no listems are added',

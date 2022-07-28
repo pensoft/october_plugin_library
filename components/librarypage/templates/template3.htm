@@ -15,7 +15,7 @@
 			<div class="col-md-9 col-xs-12"><h3 class="card-title">{{ record.title }}</h3></div>
 			{%if record.file %}
 			<div class="col-md-3 col-xs-12">
-				<a target="_blank" href="{{record.file.path()}}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>Download</a>
+				<a target="_blank" href="{{record.file.path}}{% if __SELF__.property('add_file_name') %}#file_name={{record.file.file_name}}{% endif %}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>Download</a>
 			</div>
 			{%endif%}
 

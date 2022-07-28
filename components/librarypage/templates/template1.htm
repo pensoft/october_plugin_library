@@ -33,7 +33,7 @@
 			<div class="row middle-xs">
 				<div class="col-xs-12">
 					<div class="d-flex flex-column justify-content-start flex-lg-row mt-1 d-flex align-items-start">
-						<a target="_blank" href="{{record.file.path()}}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>Download ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
+						<a target="_blank" href="{{record.file.path}}{% if __SELF__.property('add_file_name') %}#file_name={{record.file.file_name}}{% endif %}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>Download ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
 					</div>
 				</div>
 			</div>
