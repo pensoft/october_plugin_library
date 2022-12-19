@@ -2,8 +2,9 @@
 <div class="library-item">
 	<div class="row">
 		<div class="col-xs-12 col-md-9">
-			{{record.year_attr}} |
-			{{record.type_attr}}
+			<div class="library-type-label">
+                <span class="doc_year">{{record.year_attr}} |</span>
+                <span class="doc_type">{{record.type_attr}}</span></div>
 			<h3 class="card-title">{{ record.title }}</h3>
 			<div class="body">
 				{% partial __SELF__ ~ "::libraries-content" label="Authors:" value=record.authors %}<br>
