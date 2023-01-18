@@ -10,7 +10,7 @@ use Cms\Classes\Theme;
 class Library extends Model
 {
     use \October\Rain\Database\Traits\Validation;
-    
+
     const STATUS_PUBLISHED = 1;
     const STATUS_INPRESS = 2;
     const STATUS_INPREPARATION = 3;
@@ -25,6 +25,10 @@ class Library extends Model
     const TYPE_BOOK = 4;
     const TYPE_DELIVERABLE = 5;
     const TYPE_REPORT = 6;
+    const TYPE_VIDEO = 7;
+    const TYPE_PRESENTATION = 8;
+    const TYPE_OTHER = 9;
+    const TYPE_PLEDGES = 10;
 
 	const SORT_TYPE_DELIVERABLES = 1;
 	const SORT_TYPE_RELEVANT_PUBLICATIONS = 2;
@@ -108,6 +112,18 @@ class Library extends Model
 				break;
 			case self::TYPE_REPORT:
 				return 'Report';
+				break;
+			case self::TYPE_VIDEO:
+				return 'Video';
+				break;
+			case self::TYPE_PRESENTATION:
+				return 'Presentation';
+				break;
+			case self::TYPE_OTHER:
+				return 'Other';
+				break;
+			case self::TYPE_PLEDGES:
+				return 'Pledges';
 				break;
 		}
 	}
