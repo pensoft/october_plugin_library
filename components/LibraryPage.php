@@ -47,6 +47,11 @@ class LibraryPage extends ComponentBase
 				'description' => 'Message to be displeyed when no listems are added',
 				'default' => 'No records found',
 			],
+            'redirect_to_download_page' => [
+                'title' => 'Download file via file-donload page',
+                'type' => 'checkbox',
+                'default' => false
+            ],
         ];
     }
 
