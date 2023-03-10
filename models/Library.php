@@ -36,8 +36,10 @@ class Library extends Model
 	const SORT_TYPE_PROJECT_PUBLICATIONS = 3;
 
     public static $allowSortingOptions = [
-        'year asc' => 'Year (asc)',
         'year desc' => 'Year (desc)',
+        'year asc' => 'Year (asc)',
+        'title asc' => 'Title (asc)',
+        'title desc' => 'Title (desc)',
     ];
 
     public static $allowSortTypesOptions = [
@@ -188,18 +190,24 @@ class Library extends Model
 			case self::SORT_TYPE_DELIVERABLES:
 				$query->ofType(self::TYPE_DELIVERABLE);
 				break;
-			case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
-                $query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_NO);
-				break;
-			case self::SORT_TYPE_PROJECT_PUBLICATIONS:
-				$query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_YES);
-				break;
+            case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
+                $query->where('type', '!=', 5)->where('derived', self::DERIVED_NO);
+//                $query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_NO);
+                break;
+            case self::SORT_TYPE_PROJECT_PUBLICATIONS:
+                $query->where('type', '!=', 5)->where('derived', self::DERIVED_YES);
+//				$query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_YES);
+                break;
 		}
 
         if(in_array($sort, array_keys(self::$allowSortingOptions))){
             $parts = explode(' ', $sort);
             list($sortField, $sortDirection) = $parts;
-            $query->orderBy($sortField, $sortDirection);
+            if($sortField == 'title'){
+                $query->orderByRAW("nullif(regexp_replace(title, '[^0-9]', '', 'g'),'')::int")->orderBy('title', $sortDirection);
+            }else{
+                $query->orderBy($sortField, $sortDirection);
+            }
         }
     }
 
