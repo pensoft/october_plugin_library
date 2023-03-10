@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Model;
 use Cms\Classes\Theme;
+use BackendAuth;
 
 /**
  * Model
@@ -78,6 +79,11 @@ class Library extends Model
 		'type_attr',
 		'date_attr',
 	];
+
+    // Add  below relationship with Revision model
+    public $morphMany = [
+        'revision_history' => ['System\Models\Revision', 'name' => 'revisionable']
+    ];
 
     public function getDueDateAttribute($value)
     {
@@ -195,5 +201,16 @@ class Library extends Model
             list($sortField, $sortDirection) = $parts;
             $query->orderBy($sortField, $sortDirection);
         }
+    }
+
+    // Add below function use for get current user details
+    public function diff()
+    {
+        $history = $this->revision_history;
+    }
+
+    public function getRevisionableUser()
+    {
+        return BackendAuth::getUser()->id;
     }
 }
