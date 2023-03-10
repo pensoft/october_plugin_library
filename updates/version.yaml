@@ -40,3 +40,5 @@
     - 'Download via download-file page'
 1.0.20:
     - 'Revision history'
+1.0.21:
+    - 'Revision history revisionable params'

@@ -35,6 +35,12 @@ class Library extends Model
 	const SORT_TYPE_RELEVANT_PUBLICATIONS = 2;
 	const SORT_TYPE_PROJECT_PUBLICATIONS = 3;
 
+    // Add  for revisions limit
+    public $revisionableLimit = 200;
+
+    // Add for revisions on particular field
+    protected $revisionable = ["id", "title", "authors", "status", "year",];
+
     public static $allowSortingOptions = [
         'year desc' => 'Year (desc)',
         'year asc' => 'Year (asc)',
