@@ -81,13 +81,13 @@ class LibraryPage extends ComponentBase
 
         $library = Library::isVisible()->listFrontEnd($options);
 
-		if($query = get('query')){
-			$library = $library->where('title', 'iLIKE', '%' . $query . '%')
-				->orwhere('authors', 'iLIKE', '%' . $query . '%')
-				->orwhere('journal_title', 'iLIKE', '%' . $query . '%')
-				->orwhere('publisher', 'iLIKE', '%' . $query . '%')
-			;
-		}
+		// if($query = get('query')){
+		// 	$library = $library->where('title', 'iLIKE', '%' . $query . '%')
+		// 		->orwhere('authors', 'iLIKE', '%' . $query . '%')
+		// 		->orwhere('journal_title', 'iLIKE', '%' . $query . '%')
+		// 		->orwhere('publisher', 'iLIKE', '%' . $query . '%')
+		// 	;
+		// }
 
         $this->page['records'] = $library->get();
         $this->page['sortOptions'] = Library::$allowSortingOptions;

@@ -40,7 +40,7 @@
 	{% if __SELF__.property('has_search') %}
 	<div id="searchLibrary" class="searchLibrary">
 		<form class="input-group align-items-start" action="" method="get">
-			<input class="form-control search" name="query" type="text" autocomplete="on" placeholder="Search in documents">
+			<input class="form-control search" name="query" type="text" autocomplete="on" placeholder="Search in documents" value="{{ input('query') }}">
 			<button class="btn searchLibrary btn-link text-grey-search-btn" type="submit"></button>
 		</form>
 	</div>

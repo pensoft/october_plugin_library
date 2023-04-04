@@ -1,5 +1,6 @@
 <?php namespace Pensoft\Library\Models;
 
+use Session;
 use Carbon\Carbon;
 use Model;
 use Cms\Classes\Theme;
@@ -184,7 +185,8 @@ class Library extends Model
         return $query->where('type', $type);
     }
 
-    public function scopeListFrontEnd($query, $options = []){
+    public function scopeListFrontEnd($query, $options = [])
+    {
         extract(
             array_merge([
                 'sort' => 'created_at desc',
@@ -192,29 +194,57 @@ class Library extends Model
             ], $options)
         );
 
-        switch ($type){
-			case self::SORT_TYPE_DELIVERABLES:
-				$query->ofType(self::TYPE_DELIVERABLE);
-				break;
+        // Get the search query from the request
+        $searchQuery = request()->get('query');
+
+        // Apply the search query
+        if ($searchQuery) {
+            $query->where(function ($query) use ($searchQuery) {
+                $query->where('title', 'iLIKE', '%' . $searchQuery . '%')
+                    ->orWhere('authors', 'iLIKE', '%' . $searchQuery . '%')
+                    ->orWhere('journal_title', 'iLIKE', '%' . $searchQuery . '%')
+                    ->orWhere('publisher', 'iLIKE', '%' . $searchQuery . '%');
+            });
+        }
+        // Get the sort order
+        $parts = explode(' ', $sort);
+        list($sortField, $sortDirection) = $parts;
+
+        // Apply the filter based on selected type
+        switch ($type) {
+            case self::SORT_TYPE_DELIVERABLES:
+                $query->ofType(self::TYPE_DELIVERABLE);
+                Session::put('selectedType', self::TYPE_DELIVERABLE);
+                break;
             case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
-                $query->where('type', '!=', 5)->where('derived', self::DERIVED_NO);
-//                $query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_NO);
+                $query->where('type', '!=', self::TYPE_DELIVERABLE)->where('derived', self::DERIVED_NO);
+                Session::put('selectedType', 0);
+                Session::put('derived', self::SORT_TYPE_RELEVANT_PUBLICATIONS);
                 break;
             case self::SORT_TYPE_PROJECT_PUBLICATIONS:
-                $query->where('type', '!=', 5)->where('derived', self::DERIVED_YES);
-//				$query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_YES);
+                $query->where('type', '!=', self::TYPE_DELIVERABLE)->where('derived', self::DERIVED_YES);
+                Session::put('selectedType', 0);
+                Session::put('derived', 1);
                 break;
-		}
-
-        if(in_array($sort, array_keys(self::$allowSortingOptions))){
-            $parts = explode(' ', $sort);
-            list($sortField, $sortDirection) = $parts;
-            if($sortField == 'title'){
-                $query->orderByRAW("nullif(regexp_replace(title, '[^0-9]', '', 'g'),'')::int")->orderBy('title', $sortDirection);
-            }else{
-                $query->orderBy($sortField, $sortDirection);
-            }
+            case "0":
+                Session::put('selectedType', 0);
+                Session::put('derived', 0);
+                break;
         }
+
+        // get value from session
+        $selectedType = Session::get('selectedType', 0);
+        $derived = Session::get('derived', 0);
+
+        // Apply sortation
+        if ($selectedType === self::TYPE_DELIVERABLE) {
+            $query->orderBy($sortField, $sortDirection)->where('type', $selectedType);
+        } else if ($selectedType !== self::TYPE_DELIVERABLE && $derived !== 0) {
+            $query->orderBy($sortField, $sortDirection)->where('type', '!=', self::TYPE_DELIVERABLE)->where('derived', $derived);
+        } else {
+            $query->orderBy($sortField, $sortDirection);
+        }
+
     }
 
     // Add below function use for get current user details
