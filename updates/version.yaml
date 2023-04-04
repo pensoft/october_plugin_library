@@ -42,3 +42,5 @@
     - 'Revision history'
 1.0.21:
     - 'Revision history revisionable params'
+1.0.22:
+    - 'Filter, sort, search fix'
