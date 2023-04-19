@@ -44,3 +44,5 @@
     - 'Revision history revisionable params'
 1.0.22:
     - 'Fixed search'
+1.0.23:
+    - 'Fixed search and order'
