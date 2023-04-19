@@ -96,7 +96,7 @@ class LibraryPage extends ComponentBase
 			;
 		}
 
-        $this->page['records'] = $library->get();
+        $this->page['records'] = $library->orderBy('year', 'desc')->get();
         $this->page['sortOptions'] = Library::$allowSortingOptions;
         $this->page['sortTypesOptions'] = (new Library())->getSortTypesOptions();
         $this->page['total_file_size_bites'] = $this->page['records']->reduce(function ($carry, $item) {
