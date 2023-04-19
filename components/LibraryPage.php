@@ -83,9 +83,16 @@ class LibraryPage extends ComponentBase
 
 		if($query = get('query')){
 			$library = $library->where('title', 'iLIKE', '%' . $query . '%')
-				->orwhere('authors', 'iLIKE', '%' . $query . '%')
-				->orwhere('journal_title', 'iLIKE', '%' . $query . '%')
-				->orwhere('publisher', 'iLIKE', '%' . $query . '%')
+                ->orwhere('authors', 'iLIKE', '%' . $query . '%')
+                ->orwhere('journal_title', 'iLIKE', '%' . $query . '%')
+                ->orWhere('proceedings_title', 'iLIKE', '%' . $query . '%')
+                ->orWhere('monograph_title', 'iLIKE', '%' . $query . '%')
+                ->orWhere('deliverable_title', 'iLIKE', '%' . $query . '%')
+                ->orWhere('project_title', 'iLIKE', '%' . $query . '%')
+                ->orwhere('publisher', 'iLIKE', '%' . $query . '%')
+                ->orWhere('place', 'iLIKE', '%' . $query . '%')
+                ->orWhere('city', 'iLIKE', '%' . $query . '%')
+                ->orWhere('doi', 'iLIKE', '%' . $query . '%')
 			;
 		}
 
@@ -99,6 +106,9 @@ class LibraryPage extends ComponentBase
             return $carry;
         }, 0);
         $this->page['total_file_size'] = $this->page['total_file_size_bites'];
+
+        $searchQuery = request()->get('query');
+        $this->page['searchQuery'] = $searchQuery;
     }
 
     public function onFilterRecords()
