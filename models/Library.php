@@ -31,9 +31,9 @@ class Library extends Model
     const TYPE_OTHER = 9;
     const TYPE_PLEDGES = 10;
 
-	const SORT_TYPE_DELIVERABLES = 1;
-	const SORT_TYPE_RELEVANT_PUBLICATIONS = 2;
-	const SORT_TYPE_PROJECT_PUBLICATIONS = 3;
+    const SORT_TYPE_DELIVERABLES = 1;
+    const SORT_TYPE_RELEVANT_PUBLICATIONS = 2;
+    const SORT_TYPE_PROJECT_PUBLICATIONS = 3;
 
     // Add  for revisions limit
     public $revisionableLimit = 200;
@@ -49,20 +49,20 @@ class Library extends Model
     ];
 
     public static $allowSortTypesOptions = [
-		self::SORT_TYPE_DELIVERABLES => 'Deliverables',
-		self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
-		self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
+        self::SORT_TYPE_DELIVERABLES => 'Deliverables',
+        self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
+        self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
     ];
 
     public function getSortTypesOptions(){
-		$activeTheme = Theme::getActiveTheme();
-		$theme = $activeTheme->getConfig();
+        $activeTheme = Theme::getActiveTheme();
+        $theme = $activeTheme->getConfig();
         return
-        [
-            self::SORT_TYPE_DELIVERABLES => 'Deliverables',
-            self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
-            self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
-        ];
+            [
+                self::SORT_TYPE_DELIVERABLES => 'Deliverables',
+                self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
+                self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
+            ];
     }
 
     /**
@@ -78,15 +78,15 @@ class Library extends Model
 
     public $attachOne = [
         'file' => 'System\Models\File',
-		'preview' => 'System\Models\File',
+        'preview' => 'System\Models\File',
     ];
     public $appends = [
-		'status_attr',
-		'derived_attr',
-		'year_attr',
-		'type_attr',
-		'date_attr',
-	];
+        'status_attr',
+        'derived_attr',
+        'year_attr',
+        'type_attr',
+        'date_attr',
+    ];
 
     // Add  below relationship with Revision model
     public $morphMany = [
@@ -98,49 +98,49 @@ class Library extends Model
         return (new Carbon($value))->englishMonth;
     }
 
-	public function getYearAttrAttribute()
-	{
-		return (new Carbon($this->year))->year;
-	}
+    public function getYearAttrAttribute()
+    {
+        return (new Carbon($this->year))->year;
+    }
 
 
 
-	public function getTypeAttrAttribute()
-	{
-		switch ($this->type){
-			case self::TYPE_JOURNAL_PAPER:
-				return 'Journal paper';
-				break;
-			case self::TYPE_PROCEEDINGS_PAPER:
-				return 'Proceedings paper';
-				break;
-			case self::TYPE_BOOK_CHAPTER:
-				return 'Book chapter';
-				break;
-			case self::TYPE_BOOK:
-				return 'Book';
-				break;
-			case self::TYPE_DELIVERABLE:
-			default:
-				return 'Deliverable';
-				break;
-			case self::TYPE_REPORT:
-				return 'Report';
-				break;
-			case self::TYPE_VIDEO:
-				return 'Video';
-				break;
-			case self::TYPE_PRESENTATION:
-				return 'Presentation';
-				break;
-			case self::TYPE_OTHER:
-				return 'Other';
-				break;
-			case self::TYPE_PLEDGES:
-				return 'Pledges';
-				break;
-		}
-	}
+    public function getTypeAttrAttribute()
+    {
+        switch ($this->type){
+            case self::TYPE_JOURNAL_PAPER:
+                return 'Journal paper';
+                break;
+            case self::TYPE_PROCEEDINGS_PAPER:
+                return 'Proceedings paper';
+                break;
+            case self::TYPE_BOOK_CHAPTER:
+                return 'Book chapter';
+                break;
+            case self::TYPE_BOOK:
+                return 'Book';
+                break;
+            case self::TYPE_DELIVERABLE:
+            default:
+                return 'Deliverable';
+                break;
+            case self::TYPE_REPORT:
+                return 'Report';
+                break;
+            case self::TYPE_VIDEO:
+                return 'Video';
+                break;
+            case self::TYPE_PRESENTATION:
+                return 'Presentation';
+                break;
+            case self::TYPE_OTHER:
+                return 'Other';
+                break;
+            case self::TYPE_PLEDGES:
+                return 'Pledges';
+                break;
+        }
+    }
 
     public function getDateAttrAttribute()
     {
@@ -193,9 +193,9 @@ class Library extends Model
         );
 
         switch ($type){
-			case self::SORT_TYPE_DELIVERABLES:
-				$query->ofType(self::TYPE_DELIVERABLE);
-				break;
+            case self::SORT_TYPE_DELIVERABLES:
+                $query->ofType(self::TYPE_DELIVERABLE);
+                break;
             case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
                 $query->where('type', '!=', 5)->where('derived', self::DERIVED_NO);
 //                $query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_NO);
@@ -204,7 +204,7 @@ class Library extends Model
                 $query->where('type', '!=', 5)->where('derived', self::DERIVED_YES);
 //				$query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_YES);
                 break;
-		}
+        }
 
         if(in_array($sort, array_keys(self::$allowSortingOptions))){
             $parts = explode(' ', $sort);
