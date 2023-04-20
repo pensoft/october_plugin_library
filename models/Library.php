@@ -195,7 +195,9 @@ class Library extends Model
         switch ($type){
             case self::SORT_TYPE_DELIVERABLES:
                 $query->ofType(self::TYPE_DELIVERABLE);
-                $query->orderByRAW("nullif(regexp_replace(title, '[^0-9]', '', 'g'),'')::int")->orderBy('title', 'asc');
+                if($sort == "year desc"){
+                    $query->orderByRAW("nullif(regexp_replace(title, '[^0-9]', '', 'g'),'')::int")->orderBy('title', 'asc');
+                }
                 break;
             case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
                 $query->where('type', '!=', 5)->where('derived', self::DERIVED_NO);
