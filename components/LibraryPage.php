@@ -15,10 +15,10 @@ class LibraryPage extends ComponentBase
     {
         $this->addJs('assets/js/def.js');
         $this->prepareVars();
-		
+
 		// by default users are not logged in
 		$this->loggedIn = false;
-		
+
 		// then if getUser returns other value than NULL then our user is logged in
 		if (!empty(BackendAuth::getUser())) {
 			$this->loggedIn = true;
@@ -75,7 +75,7 @@ class LibraryPage extends ComponentBase
             'description' => 'Displays a collection of libraries.'
         ];
     }
-    
+
     public function handleDefaultSort($options, $query)
     {
         if (!empty($options['type']) && $options['type'] == "1"){
@@ -84,12 +84,12 @@ class LibraryPage extends ComponentBase
             }
         }
     }
-    
+
     public function prepareVars()
     {
         // Extract only needed parameters
         $options = request()->only(['page', 'perPage', 'sort', 'type', 'search']);
-        
+
         // Adding some defaults
         $options = array_merge([
             'page' => 1,
@@ -98,21 +98,21 @@ class LibraryPage extends ComponentBase
             'type' => 0,
             'search' => request()->get('search'),
         ], $options);
-        
+
 //        var_dump($options);
         // Initiate the query
         $query = Library::isVisible();
-    
+
         // Apply the search scope if search query exists
         if (!empty($options['search'])) {
             $query = $query->search($options['search']);
         }
-    
+
         // Apply the filter if filter exists
         if (!empty($options['type'])) {
             $query = $query->filterByType($options['type']);
         }
-    
+
         // Apply the sort if sort option exists
         if (!empty($options['sort'])) {
             $parts = explode(' ', $options['sort']);
@@ -120,11 +120,32 @@ class LibraryPage extends ComponentBase
             $query = $query->orderBy($sortField, $sortDirection);
         }
 
+
         // Get the paginated result
         $library = $query->paginate($options['perPage'], $options['page'])->appends(request()->query());
-        
+
         // Assigning to the page variable
         $this->page['records'] = $library;
+
+//        $library = Library::isVisible()->listFrontEnd($options);
+//
+//		if($query = get('query')){
+//			$library = $library->where('title', 'iLIKE', '%' . $query . '%')
+//                ->orwhere('authors', 'iLIKE', '%' . $query . '%')
+//                ->orwhere('journal_title', 'iLIKE', '%' . $query . '%')
+//                ->orWhere('proceedings_title', 'iLIKE', '%' . $query . '%')
+//                ->orWhere('monograph_title', 'iLIKE', '%' . $query . '%')
+//                ->orWhere('deliverable_title', 'iLIKE', '%' . $query . '%')
+//                ->orWhere('project_title', 'iLIKE', '%' . $query . '%')
+//                ->orwhere('publisher', 'iLIKE', '%' . $query . '%')
+//                ->orWhere('place', 'iLIKE', '%' . $query . '%')
+//                ->orWhere('city', 'iLIKE', '%' . $query . '%')
+//                ->orWhere('doi', 'iLIKE', '%' . $query . '%')
+//			;
+//		}
+//
+//        $this->page['records'] = $library->orderBy('year', 'desc')->orderBy('id', 'desc')->get();
+
         $this->page['sortOptions'] = Library::$allowSortingOptions;
         $this->page['sortTypesOptions'] = (new Library())->getSortTypesOptions();
         $this->page['total_file_size_bites'] = $library->reduce(function ($carry, $item) {
@@ -134,13 +155,15 @@ class LibraryPage extends ComponentBase
             return $carry;
         }, 0);
         $this->page['total_file_size'] = $this->page['total_file_size_bites'];
+
         $this->page['searchQuery'] = $options['search'];
         $this->page['currentType'] = $options['type'];
         $this->page['currentSort'] = $options['sort'];
-        
+
+
     }
-    
-    
+
+
     public function onFilterRecords()
     {
         $this->prepareVars();

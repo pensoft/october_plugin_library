@@ -43,4 +43,10 @@
 1.0.21:
     - 'Revision history revisionable params'
 1.0.22:
-    - 'Filter, sort, search fix'
+    - 'Fixed search'
+1.0.23:
+    - 'Fixed search and order'
+1.0.24:
+    - 'Fixed deliverables order'
+1.0.25:
+    - 'Fixed serach, sort, folter, paging'

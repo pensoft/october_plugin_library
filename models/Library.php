@@ -30,7 +30,8 @@ class Library extends Model
     const TYPE_PRESENTATION = 8;
     const TYPE_OTHER = 9;
     const TYPE_PLEDGES = 10;
-    
+
+
     const SORT_TYPE_ALL = 0;
 	const SORT_TYPE_DELIVERABLES = 1;
 	const SORT_TYPE_RELEVANT_PUBLICATIONS = 2;
@@ -67,8 +68,8 @@ class Library extends Model
 //    }
 
     public function getSortTypesOptions(){
-		$activeTheme = Theme::getActiveTheme();
-		$theme = $activeTheme->getConfig();
+        $activeTheme = Theme::getActiveTheme();
+        $theme = $activeTheme->getConfig();
         return
         [
             self::SORT_TYPE_ALL => "All Documents",
@@ -91,15 +92,15 @@ class Library extends Model
 
     public $attachOne = [
         'file' => 'System\Models\File',
-		'preview' => 'System\Models\File',
+        'preview' => 'System\Models\File',
     ];
     public $appends = [
-		'status_attr',
-		'derived_attr',
-		'year_attr',
-		'type_attr',
-		'date_attr',
-	];
+        'status_attr',
+        'derived_attr',
+        'year_attr',
+        'type_attr',
+        'date_attr',
+    ];
 
     // Add  below relationship with Revision model
     public $morphMany = [
@@ -111,49 +112,49 @@ class Library extends Model
         return (new Carbon($value))->englishMonth;
     }
 
-	public function getYearAttrAttribute()
-	{
-		return (new Carbon($this->year))->year;
-	}
+    public function getYearAttrAttribute()
+    {
+        return (new Carbon($this->year))->year;
+    }
 
 
 
-	public function getTypeAttrAttribute()
-	{
-		switch ($this->type){
-			case self::TYPE_JOURNAL_PAPER:
-				return 'Journal paper';
-				break;
-			case self::TYPE_PROCEEDINGS_PAPER:
-				return 'Proceedings paper';
-				break;
-			case self::TYPE_BOOK_CHAPTER:
-				return 'Book chapter';
-				break;
-			case self::TYPE_BOOK:
-				return 'Book';
-				break;
-			case self::TYPE_DELIVERABLE:
-			default:
-				return 'Deliverable';
-				break;
-			case self::TYPE_REPORT:
-				return 'Report';
-				break;
-			case self::TYPE_VIDEO:
-				return 'Video';
-				break;
-			case self::TYPE_PRESENTATION:
-				return 'Presentation';
-				break;
-			case self::TYPE_OTHER:
-				return 'Other';
-				break;
-			case self::TYPE_PLEDGES:
-				return 'Pledges';
-				break;
-		}
-	}
+    public function getTypeAttrAttribute()
+    {
+        switch ($this->type){
+            case self::TYPE_JOURNAL_PAPER:
+                return 'Journal paper';
+                break;
+            case self::TYPE_PROCEEDINGS_PAPER:
+                return 'Proceedings paper';
+                break;
+            case self::TYPE_BOOK_CHAPTER:
+                return 'Book chapter';
+                break;
+            case self::TYPE_BOOK:
+                return 'Book';
+                break;
+            case self::TYPE_DELIVERABLE:
+            default:
+                return 'Deliverable';
+                break;
+            case self::TYPE_REPORT:
+                return 'Report';
+                break;
+            case self::TYPE_VIDEO:
+                return 'Video';
+                break;
+            case self::TYPE_PRESENTATION:
+                return 'Presentation';
+                break;
+            case self::TYPE_OTHER:
+                return 'Other';
+                break;
+            case self::TYPE_PLEDGES:
+                return 'Pledges';
+                break;
+        }
+    }
 
     public function getDateAttrAttribute()
     {
@@ -197,7 +198,7 @@ class Library extends Model
     {
         return $query->where('type', $type);
     }
-    
+
     public function scopeSortByDefault($query)
     {
     }
@@ -212,7 +213,7 @@ class Library extends Model
     {
         return BackendAuth::getUser()->id;
     }
-    
+
     /**
      * Scope to sort records
      *
@@ -259,6 +260,7 @@ class Library extends Model
             case "0":
                 return $query;
         }
+
     }
 
     /**
@@ -275,15 +277,18 @@ class Library extends Model
         }
         return $query->where(function ($query) use ($searchTerm) {
             $query->where('title', 'iLIKE', '%' . $searchTerm . '%')
-                ->orWhere('authors', 'ilike', "%' . $searchTerm . '%")
-                ->orWhere('journal_title', 'ilike', "%' . $searchTerm . '%")
-                ->orWhere('proceedings_title', 'ilike', "%' . $searchTerm . '%")
-                ->orWhere('monograph_title', 'ilike', "%' . $searchTerm . '%")
-                ->orWhere('deliverable_title', 'ilike', "%' . $searchTerm . '%")
-                ->orWhere('project_title', 'ilike', "%' . $searchTerm . '%")
-                ->orWhere('publisher', 'ilike', "%' . $searchTerm . '%")
-                ->orWhere('place', 'ilike', "%' . $searchTerm . '%");
+                ->orwhere('authors', 'iLIKE', '%' . $searchTerm . '%')
+                ->orwhere('journal_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('proceedings_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('monograph_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('deliverable_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('project_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orwhere('publisher', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('place', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('city', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('doi', 'iLIKE', '%' . $searchTerm . '%');
         });
     }
+
 
 }
