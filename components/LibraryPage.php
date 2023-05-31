@@ -15,10 +15,11 @@ class LibraryPage extends ComponentBase
     {
         $this->addJs('assets/js/def.js');
         $this->prepareVars();
-
+		
 		// by default users are not logged in
 		$this->loggedIn = false;
-		// end then if getUser returns other value than NULL then our user is logged in
+		
+		// then if getUser returns other value than NULL then our user is logged in
 		if (!empty(BackendAuth::getUser())) {
 			$this->loggedIn = true;
 		}
@@ -44,11 +45,11 @@ class LibraryPage extends ComponentBase
             ],
 			'no_records_message' => [
 				'title' => 'No records message',
-				'description' => 'Message to be displeyed when no listems are added',
+				'description' => 'Message to be displayed when no list items are added',
 				'default' => 'No records found',
 			],
             'redirect_to_download_page' => [
-                'title' => 'Download file via file-donload page',
+                'title' => 'Download file via file-download page',
                 'type' => 'checkbox',
                 'default' => false
             ],
@@ -74,37 +75,77 @@ class LibraryPage extends ComponentBase
             'description' => 'Displays a collection of libraries.'
         ];
     }
-
+    
+    public function handleDefaultSort($options, $query)
+    {
+        if (!empty($options['type']) && $options['type'] == "1"){
+            if(isset($options['sort'])){
+                $sortDefault = 'year desc';
+            }
+        }
+    }
+    
     public function prepareVars()
     {
-        $options = post('Filter', []);
+        // Extract only needed parameters
+        $options = request()->only(['page', 'perPage', 'sort', 'type', 'search']);
+        
+        // Adding some defaults
+        $options = array_merge([
+            'page' => 1,
+            'perPage' => 15,
+            'sort' => 'title asc',
+            'type' => 0,
+            'search' => request()->get('search'),
+        ], $options);
+        
+//        var_dump($options);
+        // Initiate the query
+        $query = Library::isVisible();
+    
+        // Apply the search scope if search query exists
+        if (!empty($options['search'])) {
+            $query = $query->search($options['search']);
+        }
+    
+        // Apply the filter if filter exists
+        if (!empty($options['type'])) {
+            $query = $query->filterByType($options['type']);
+        }
+    
+        // Apply the sort if sort option exists
+        if (!empty($options['sort'])) {
+            $parts = explode(' ', $options['sort']);
+            list($sortField, $sortDirection) = $parts;
+            $query = $query->orderBy($sortField, $sortDirection);
+        }
 
-        $library = Library::isVisible()->listFrontEnd($options);
-
-		// if($query = get('query')){
-		// 	$library = $library->where('title', 'iLIKE', '%' . $query . '%')
-		// 		->orwhere('authors', 'iLIKE', '%' . $query . '%')
-		// 		->orwhere('journal_title', 'iLIKE', '%' . $query . '%')
-		// 		->orwhere('publisher', 'iLIKE', '%' . $query . '%')
-		// 	;
-		// }
-
-        $this->page['records'] = $library->get();
+        // Get the paginated result
+        $library = $query->paginate($options['perPage'], $options['page'])->appends(request()->query());
+        
+        // Assigning to the page variable
+        $this->page['records'] = $library;
         $this->page['sortOptions'] = Library::$allowSortingOptions;
         $this->page['sortTypesOptions'] = (new Library())->getSortTypesOptions();
-        $this->page['total_file_size_bites'] = $this->page['records']->reduce(function ($carry, $item) {
+        $this->page['total_file_size_bites'] = $library->reduce(function ($carry, $item) {
             if ($item->file) {
                 return $carry + $item->file->file_size;
             }
             return $carry;
         }, 0);
         $this->page['total_file_size'] = $this->page['total_file_size_bites'];
+        $this->page['searchQuery'] = $options['search'];
+        $this->page['currentType'] = $options['type'];
+        $this->page['currentSort'] = $options['sort'];
+        
     }
-
+    
+    
     public function onFilterRecords()
     {
         $this->prepareVars();
     }
+
 
     public function onDownloadAll()
     {
