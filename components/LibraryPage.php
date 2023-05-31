@@ -2,6 +2,7 @@
 
 namespace Pensoft\Library\Components;
 
+use Cms\Classes\Theme;
 use Backend\Facades\BackendAuth;
 use \Cms\Classes\ComponentBase;
 use Pensoft\Library\Classes\ZipFiles;
@@ -23,8 +24,11 @@ class LibraryPage extends ComponentBase
 		if (!empty(BackendAuth::getUser())) {
 			$this->loggedIn = true;
 		}
+        
+        $this->page['themeName'] = Theme::getActiveTheme()->getConfig()['name'];
+        
     }
-
+    
     public function defineProperties()
     {
         return [
@@ -75,16 +79,7 @@ class LibraryPage extends ComponentBase
             'description' => 'Displays a collection of libraries.'
         ];
     }
-
-    public function handleDefaultSort($options, $query)
-    {
-        if (!empty($options['type']) && $options['type'] == "1"){
-            if(isset($options['sort'])){
-                $sortDefault = 'year desc';
-            }
-        }
-    }
-
+    
     public function prepareVars()
     {
         // Extract only needed parameters
@@ -140,8 +135,6 @@ class LibraryPage extends ComponentBase
         $this->page['searchQuery'] = $options['search'];
         $this->page['currentType'] = $options['type'];
         $this->page['currentSort'] = $options['sort'];
-
-
     }
 
 
@@ -153,13 +146,13 @@ class LibraryPage extends ComponentBase
 
     public function onDownloadAll()
     {
-//        $zip = (new ZipFiles(new Library))->downloadFiles();
-//        header("Content-type: application/zip");
-//        header("Content-Disposition: attachment; filename=publications.zip");
-//        header("Pragma: no-cache");
-//        header("Expires: 0");
-//        readfile($zip);
-//        exit;
+        $zip = (new ZipFiles(new Library))->downloadFiles();
+        header("Content-type: application/zip");
+        header("Content-Disposition: attachment; filename=publications.zip");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        readfile($zip);
+        exit;
     }
 
     public function hasLibrary(){

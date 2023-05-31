@@ -66,7 +66,6 @@ class Library extends Model
 //
 //        return $sortedRecords;
 //    }
-
     public function getSortTypesOptions(){
         $activeTheme = Theme::getActiveTheme();
         $theme = $activeTheme->getConfig();
@@ -78,7 +77,13 @@ class Library extends Model
             self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
         ];
     }
-
+    
+    public function scopeThemeName(){
+        $activeTheme = Theme::getActiveTheme();
+        $theme = $activeTheme->getConfig();
+        return strtoupper($theme['name']).' Publications';
+    }
+    
     /**
      * @var string The database table used by the model.
      */

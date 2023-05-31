@@ -52,3 +52,5 @@
     - 'Fixed serach, sort, folter, paging'
 1.0.26:
     - 'Removed download all btn'
+1.0.27:
+    - 'FIxed download'
