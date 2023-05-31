@@ -54,3 +54,5 @@
     - 'Removed download all btn'
 1.0.27:
     - 'FIxed download'
+1.0.28:
+    - 'FIxed tab active state'

@@ -12,9 +12,9 @@
 <form method="GET" id="filterForm" action="">
     <div class="tabs" id="mylibraryForm">
         <a data-type="0">All documents</a>
-        <a data-type="1">Deliverables</a>
-        <a data-type="2">Relevant Publications</a>
-        <a data-type="3">{{themeName}} Publications</a>
+        <a data-type="1" {% if currentType == 1 %} class="active"{% else %} {% endif%}>Deliverables</a>
+        <a data-type="2" {% if currentType == 2 %} class="active"{% else %} {% endif%}>Relevant Publications</a>
+        <a data-type="3" {% if currentType == 3 %} class="active"{% else %} {% endif%}>{{themeName}} Publications</a>
     </div>
     <div id="libraryForm" class="ui form libraryForm">
         <div class="row">
