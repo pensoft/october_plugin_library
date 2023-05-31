@@ -127,25 +127,6 @@ class LibraryPage extends ComponentBase
         // Assigning to the page variable
         $this->page['records'] = $library;
 
-//        $library = Library::isVisible()->listFrontEnd($options);
-//
-//		if($query = get('query')){
-//			$library = $library->where('title', 'iLIKE', '%' . $query . '%')
-//                ->orwhere('authors', 'iLIKE', '%' . $query . '%')
-//                ->orwhere('journal_title', 'iLIKE', '%' . $query . '%')
-//                ->orWhere('proceedings_title', 'iLIKE', '%' . $query . '%')
-//                ->orWhere('monograph_title', 'iLIKE', '%' . $query . '%')
-//                ->orWhere('deliverable_title', 'iLIKE', '%' . $query . '%')
-//                ->orWhere('project_title', 'iLIKE', '%' . $query . '%')
-//                ->orwhere('publisher', 'iLIKE', '%' . $query . '%')
-//                ->orWhere('place', 'iLIKE', '%' . $query . '%')
-//                ->orWhere('city', 'iLIKE', '%' . $query . '%')
-//                ->orWhere('doi', 'iLIKE', '%' . $query . '%')
-//			;
-//		}
-//
-//        $this->page['records'] = $library->orderBy('year', 'desc')->orderBy('id', 'desc')->get();
-
         $this->page['sortOptions'] = Library::$allowSortingOptions;
         $this->page['sortTypesOptions'] = (new Library())->getSortTypesOptions();
         $this->page['total_file_size_bites'] = $library->reduce(function ($carry, $item) {
@@ -172,13 +153,13 @@ class LibraryPage extends ComponentBase
 
     public function onDownloadAll()
     {
-        $zip = (new ZipFiles(new Library))->downloadFiles();
-        header("Content-type: application/zip");
-        header("Content-Disposition: attachment; filename=publications.zip");
-        header("Pragma: no-cache");
-        header("Expires: 0");
-        readfile($zip);
-        exit;
+//        $zip = (new ZipFiles(new Library))->downloadFiles();
+//        header("Content-type: application/zip");
+//        header("Content-Disposition: attachment; filename=publications.zip");
+//        header("Pragma: no-cache");
+//        header("Expires: 0");
+//        readfile($zip);
+//        exit;
     }
 
     public function hasLibrary(){

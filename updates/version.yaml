@@ -50,3 +50,5 @@
     - 'Fixed deliverables order'
 1.0.25:
     - 'Fixed serach, sort, folter, paging'
+1.0.26:
+    - 'Removed download all btn'
