@@ -4,13 +4,13 @@ use Carbon\Carbon;
 use Model;
 use Cms\Classes\Theme;
 use BackendAuth;
-
+use \October\Rain\Database\Traits\Validation;
 /**
  * Model
  */
 class Library extends Model
 {
-    use \October\Rain\Database\Traits\Validation;
+    use Validation;
 
     const STATUS_PUBLISHED = 1;
     const STATUS_INPRESS = 2;
@@ -114,15 +114,13 @@ class Library extends Model
 
     public function getDueDateAttribute($value)
     {
-        return (new Carbon($value))->englishMonth;
+        return Carbon::parse($value)->englishMonth;
     }
 
     public function getYearAttrAttribute()
     {
-        return (new Carbon($this->year))->year;
+        return Carbon::parse($this->year)->year;
     }
-
-
 
     public function getTypeAttrAttribute()
     {
@@ -163,25 +161,26 @@ class Library extends Model
 
     public function getDateAttrAttribute()
     {
-        return (new Carbon($this->year))->day . ' ' . (new Carbon($this->year))->englishMonth .' '. (new Carbon($this->year))->year;
+        $dt = Carbon::parse($this->year);
+        return sprintf('%s %s %s', [$dt->day, $dt->englishMonth, $dt->year]);
     }
 
     public function getStatusAttrAttribute()
     {
-        switch((int) $this->status){
-            case self::STATUS_PUBLISHED: return 'Published';
-            case self::STATUS_INPRESS: return 'In Press';
-            case self::STATUS_INPREPARATION: return 'In Preparation';
-            case self::STATUS_OTHER: return 'Other';
-        }
+        return @[
+            self::STATUS_PUBLISHED => 'Published',
+            self::STATUS_INPRESS => 'In Press',
+            self::STATUS_INPREPARATION => 'In Preparation',
+            self::STATUS_OTHER => 'Other',
+        ][(int)$this->status];
     }
 
     public function getDerivedAttrAttribute($value)
     {
-        switch((int) $this->derived){
-            case self::DERIVED_YES: return 'Yes';
-            case self::DERIVED_NO: return 'No';
-        }
+        return @[
+            self::DERIVED_YES => 'Yes',
+            self::DERIVED_NO => 'No',
+        ][(int) $this->derived];
     }
 
     public function getIsFileAttribute()

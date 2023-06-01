@@ -3,6 +3,7 @@
 namespace Pensoft\Library\Components;
 
 use \Cms\Classes\ComponentBase;
+use \Pensoft\Library\Models\Library as ModelsLibrary;
 
 class Library extends ComponentBase
 {
@@ -17,6 +18,6 @@ class Library extends ComponentBase
 
     public function records()
     {
-        return \Pensoft\Library\Models\Library::isVisible()->get();
+        return ModelsLibrary::isVisible()->get();
     }
 }

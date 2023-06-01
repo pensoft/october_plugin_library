@@ -7,21 +7,24 @@ use Backend\Facades\BackendAuth;
 use \Cms\Classes\ComponentBase;
 use Pensoft\Library\Classes\ZipFiles;
 use Pensoft\Library\Models\Library;
+use function Pensoft\Library\{exists, exists_with, human_filesize};
 
 class LibraryPage extends ComponentBase
 {
-	public $loggedIn;
+    /**
+     * by default users are not logged in
+     */
+	public $loggedIn = false;
 
+    const DOWNLOAD_FILENAME = 'publications.zip';
+    
     public function onRun()
     {
         $this->addJs('assets/js/def.js');
         $this->prepareVars();
 
-		// by default users are not logged in
-		$this->loggedIn = false;
-
 		// then if getUser returns other value than NULL then our user is logged in
-		if (!empty(BackendAuth::getUser())) {
+		if (exists(BackendAuth::getUser())) {
 			$this->loggedIn = true;
 		}
         
@@ -87,51 +90,54 @@ class LibraryPage extends ComponentBase
 
         // Adding some defaults
         $options = array_merge([
-            'page' => 1,
-            'perPage' => 15,
+            'page' => "1",
+            'perPage' => "15",
             'sort' => 'title asc',
-            'type' => 0,
+            'type' => "0",
             'search' => request()->get('search'),
         ], $options);
 
 //        var_dump($options);
         // Initiate the query
-        $query = Library::isVisible();
+        $libraries = new Library();
+        $libraries = $libraries->isVisible();
 
         // Apply the search scope if search query exists
-        if (!empty($options['search'])) {
-            $query = $query->search($options['search']);
+        if (exists($search = $options['search'])) {
+            $libraries = $libraries->search($search);
         }
 
         // Apply the filter if filter exists
-        if (!empty($options['type'])) {
-            $query = $query->filterByType($options['type']);
+        if (exists($type = $options['type'])) {
+            $libraries = $libraries->filterByType($type);
         }
 
         // Apply the sort if sort option exists
-        if (!empty($options['sort'])) {
-            $parts = explode(' ', $options['sort']);
+        if (exists($sort = $options['sort'])) {
+            $parts = explode(' ', $sort);
             list($sortField, $sortDirection) = $parts;
-            $query = $query->orderBy($sortField, $sortDirection);
+
+            if(exists_with(strtolower($sortDirection), ['asc', 'desc'], true)){
+                $libraries = $libraries->orderBy($sortField, $sortDirection);
+            }
         }
 
-
         // Get the paginated result
-        $library = $query->paginate($options['perPage'], $options['page'])->appends(request()->query());
+        $libraryRecords = $libraries->paginate($options['perPage'], $options['page'])->appends(request()->query());
 
-        // Assigning to the page variable
-        $this->page['records'] = $library;
-
-        $this->page['sortOptions'] = Library::$allowSortingOptions;
-        $this->page['sortTypesOptions'] = (new Library())->getSortTypesOptions();
-        $this->page['total_file_size_bites'] = $library->reduce(function ($carry, $item) {
-            if ($item->file) {
+        $sumFileSizes = function ($carry, $item) {
+            if (isset($item->file->file_size)) {
                 return $carry + $item->file->file_size;
             }
             return $carry;
-        }, 0);
-        $this->page['total_file_size'] = $this->page['total_file_size_bites'];
+        };
+        // Assigning to the page variable
+        $this->page['records'] = $libraryRecords;
 
+        $this->page['sortOptions'] = Library::$allowSortingOptions;
+        $this->page['sortTypesOptions'] = (new Library())->getSortTypesOptions();
+        $this->page['total_file_size_bites'] = $libraryRecords->reduce($sumFileSizes, 0);
+        $this->page['total_file_size_human'] = human_filesize($this->page['total_file_size_bites']);
         $this->page['searchQuery'] = $options['search'];
         $this->page['currentType'] = $options['type'];
         $this->page['currentSort'] = $options['sort'];
@@ -148,7 +154,7 @@ class LibraryPage extends ComponentBase
     {
         $zip = (new ZipFiles(new Library))->downloadFiles();
         header("Content-type: application/zip");
-        header("Content-Disposition: attachment; filename=publications.zip");
+        header("Content-Disposition: attachment; filename=".self::DOWNLOAD_FILENAME);
         header("Pragma: no-cache");
         header("Expires: 0");
         readfile($zip);
@@ -158,4 +164,5 @@ class LibraryPage extends ComponentBase
     public function hasLibrary(){
         return Library::exists();
     }
+    
 }
