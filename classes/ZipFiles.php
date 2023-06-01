@@ -3,6 +3,7 @@
 namespace Pensoft\Library\Classes;
 
 use Pensoft\Library\Models\Library;
+use \ZipArchive;
 
 class ZipFiles
 {
@@ -18,14 +19,14 @@ class ZipFiles
             $filename = 'file';
         }
         $model = $this->model;
-        $records = $model->isVisible()->get()->filter(function($item){
+        $withFiles = function($item){
             return isset($item->file);
-        });
+        }
+        $records = $model->isVisible()->get()->filter($withFiles);
 
         $zip_file = tempnam(sys_get_temp_dir(), "publications");
-        $zip = new \ZipArchive();
-        $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-
+        $zip = new ZipArchive();
+        $zip->open($zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE);
         
         foreach ($records as $item) {
             $file = $item->file->getLocalPath();
@@ -35,7 +36,6 @@ class ZipFiles
                 $newFilename
             );
         }
-        
 
         $zip->close();
         return $zip_file;

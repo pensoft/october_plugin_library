@@ -1,11 +1,11 @@
-<?php namespace Pensoft\Library;
-
+<?php 
+namespace Pensoft\Library;
 
 use System\Classes\PluginBase;
 use Pensoft\Library\Components\Library;
 use Pensoft\Library\Components\LibraryPage;
-use SaurabhDhariwal\Revisionhistory\Classes\Diff as Diff;
-use System\Models\Revision as Revision;
+use SaurabhDhariwal\Revisionhistory\Classes\Diff;
+use System\Models\Revision;
 
 class Plugin extends PluginBase
 {
