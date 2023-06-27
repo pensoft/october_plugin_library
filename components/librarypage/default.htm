@@ -2,46 +2,57 @@
 <div class="row center-xs mb-1">
     <div class="col-xs">
         {{ form_open({request: __SELF__ ~ '::onDownloadAll'}) }}
-            <button type="submit" href="#" class="btn btn-primary"><i class="pr normal p-download"></i> <span class="download_all">Download all</span> <span class="publications">publications</span> <span class="download_size">({{ (total_file_size / 1024 / 1024 )|round(2)}} MB)</span></button>
-            {{ form_close() }}
+        <button type="submit" href="#" class="btn btn-primary"><i class="pr normal p-download"></i> <span class="download_all">Download all</span> <span class="publications">publications</span> <span class="download_size">({{ (total_file_size / 1024 / 1024 )|round(2)}} MB)</span></button>
+        {{ form_close() }}
     </div>
 </div>
 {% endif %}
 
 {% if __SELF__.hasLibrary() %}
-<form method="GET" id="filterForm" action="">
-    <div class="tabs" id="mylibraryForm">
-        <a data-type="0" {% if currentType == 0 %} class="active"{% else %} {% endif%}>All documents</a>
-        <a data-type="1" {% if currentType == 1 %} class="active"{% else %} {% endif%}>Deliverables</a>
-        <a data-type="2" {% if currentType == 2 %} class="active"{% else %} {% endif%}>Relevant Publications</a>
-        <a data-type="3" {% if currentType == 3 %} class="active"{% else %} {% endif%}>{{themeName}} Publications</a>
-    </div>
-    <div id="libraryForm" class="ui form libraryForm">
-        <div class="row">
-            <div class="col-sm-2 col-xs">
-                <div class="field">
-                    <input type="hidden" name="type" id="typeInput" value="{{ currentType }}">
-                    <select name="sort" id="sortSelect">
-                        {% for code,option in sortOptions %}
-                        <option value="{{code}}" {% if code == currentSort %}selected{% endif %}>
-                            {{option}}
-                        </option>
-                        {% endfor %}
-                    </select>
+    <form method="GET" id="typeForm" action="">
+        <div class="tabs" id="mylibraryForm">
+            <a data-type="0" {% if currentType == 0 %} class="active"{% else %} {% endif%}>All documents</a>
+            <a data-type="1" {% if currentType == 1 %} class="active"{% else %} {% endif%}>Deliverables</a>
+            <a data-type="2" {% if currentType == 2 %} class="active"{% else %} {% endif%}>Relevant Publications</a>
+            <a data-type="3" {% if currentType == 3 %} class="active"{% else %} {% endif%}>{{themeName}} Publications</a>
+        </div>
+        <input type="hidden" name="type" id="typeInput" value="{{ currentType }}">
+    </form>
+
+    <div class="form-wrapper">
+        <div class="sort-form">
+            {{ form_ajax(__SELF__ ~ '::onSortRecords', { update: {'@libraries': '#partialLibraries'} }) }}
+            <div id="libraryForm" class="ui form libraryForm">
+                <div class="row">
+                    <div class="col-sm-2 col-xs">
+                        <div class="field">
+                            <select name="Filter[sort]" id="sortSelect">
+                                {% for code,option in sortOptions %}
+                                <option value="{{code}}" {% if code == currentSort %}selected{% endif %}>
+                                    {{option}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
+            {{ form_close() }}
         </div>
+
+        {% if __SELF__.property('has_search') %}
+        <form method="GET" id="searchForm" action="">
+            <div id="searchLibrary" class="searchLibrary">
+                <div class="input-group align-items-start">
+                    <input class="form-control search" name="search" type="text" autocomplete="on"
+                           placeholder="Search in documents" value="{{searchQuery}}">
+                    <button id="clearBtn" class="btn btn-reset btn-link text-grey-search-btn" type="button" title="clear search">&#x2715</button>
+                    <button class="btn searchLibrary btn-link text-grey-search-btn" type="submit"></button>
+                </div>
+            </div>
+        </form>
+        {% endif %}
     </div>
-    {% if __SELF__.property('has_search') %}
-    <div id="searchLibrary" class="searchLibrary">
-    <div class="input-group align-items-start">
-        <input class="form-control search" name="search" type="text" autocomplete="on"
-                placeholder="Search in documents" value="{{searchQuery}}">
-        <button class="btn searchLibrary btn-link text-grey-search-btn" type="submit"></button>
-    </div>
-    </div>
-    {% endif %}
-</form>
 
 <div class='library-items' id="partialLibraries">
     {% partial __SELF__ ~ '::libraries' %}
@@ -54,15 +65,33 @@
 {% endif %}
 
 <script>
-    document.getElementById('sortSelect').addEventListener('change', function () {
-        document.getElementById('filterForm').submit();
-    });
 
     document.getElementById('mylibraryForm').addEventListener('click', function (e) {
         e.preventDefault();
         if (e.target.getAttribute('data-type')) {
             document.getElementById('typeInput').value = e.target.getAttribute('data-type');
-            document.getElementById('filterForm').submit();
+            submitForms();
         }
     });
+
+    document.getElementById('clearBtn').addEventListener('click', function () {
+        var searchInput = document.querySelector('.form-control.search');
+        searchInput.value = '';
+        submitForms();
+    });
+
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitForms();
+    });
+
+    function submitForms() {
+        var typeForm = document.getElementById('typeForm');
+        var searchForm = document.getElementById('searchForm');
+        var typeValue = typeForm.elements['type'].value;
+        var searchValue = searchForm.elements['search'].value;
+        var newUrl = '?type=' + encodeURIComponent(typeValue) + '&search=' + encodeURIComponent(searchValue);
+        window.location.href = newUrl;
+    }
+
 </script>

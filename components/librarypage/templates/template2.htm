@@ -4,8 +4,20 @@
 			<h3 class="card-title">{{ record.title }}</h3>
 		</div>
 		<div class="body">
+
 			{% partial __SELF__ ~ "::libraries-content" label="Authors:" value=record.authors %}
-			{% partial __SELF__ ~ "::libraries-content" label="Status:" value=record.status_attr %}
+
+            {% if record.type == 5 %}
+            {% if record.status == 1 %}
+            {% set status = 'Approved' %}
+            {% else %}
+            {% set status = 'Subject to change' %}
+            {% endif %}
+            {% else %}
+            {% set status = record.status_attr %}
+            {% endif %}
+
+            {% partial __SELF__ ~ "::libraries-content" label="Status:" value=status %}
 			{% partial __SELF__ ~ "::libraries-content" label="Year:" value=record.year_attr %}
 
 			{% partial __SELF__ ~ "::libraries-content" label="Journal:" value=record.journal_title %}
@@ -21,6 +33,7 @@
 			{% partial __SELF__ ~ "::libraries-content" label="Pages:" value=record.pages  %}
 			{% partial __SELF__ ~ "::libraries-content" label="URL/DOI:" value=record.doi is_link=true  %}
 		</div>
+
 	</div>
 
 	{%if record.file %}

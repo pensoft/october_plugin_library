@@ -58,3 +58,5 @@
     - 'FIxed tab active state'
 1.0.29:
     - 'FIxed tab active state'
+1.0.30:
+    - 'Added default sort, updated forms, modified logic'

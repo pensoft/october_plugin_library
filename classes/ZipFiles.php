@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Pensoft\Library\Classes;
 
@@ -26,7 +26,7 @@ class ZipFiles
         $zip = new \ZipArchive();
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
-        
+
         foreach ($records as $item) {
             $file = $item->file->getLocalPath();
             $newFilename = 'publications/'.substr($file, strrpos($file, '/') + 1);
@@ -35,10 +35,10 @@ class ZipFiles
                 $newFilename
             );
         }
-        
+
 
         $zip->close();
         return $zip_file;
-        
+
     }
 }

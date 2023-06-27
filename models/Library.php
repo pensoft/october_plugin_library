@@ -57,15 +57,6 @@ class Library extends Model
 		self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
     ];
 
-//    public static function naturalSort($records, $field, $direction)
-//    {
-//        $sortedRecords = $records->sort(function ($a, $b) use ($field, $direction) {
-//            $result = strnatcasecmp($a->$field, $b->$field);
-//            return $direction === 'desc' ? -$result : $result;
-//        });
-//
-//        return $sortedRecords;
-//    }
     public function getSortTypesOptions(){
         $activeTheme = Theme::getActiveTheme();
         $theme = $activeTheme->getConfig();
@@ -77,13 +68,13 @@ class Library extends Model
             self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
         ];
     }
-    
+
     public function scopeThemeName(){
         $activeTheme = Theme::getActiveTheme();
         $theme = $activeTheme->getConfig();
         return strtoupper($theme['name']).' Publications';
     }
-    
+
     /**
      * @var string The database table used by the model.
      */
@@ -204,10 +195,6 @@ class Library extends Model
         return $query->where('type', $type);
     }
 
-    public function scopeSortByDefault($query)
-    {
-    }
-
     // Add below function use for get current user details
     public function diff()
     {
@@ -217,6 +204,12 @@ class Library extends Model
     public function getRevisionableUser()
     {
         return BackendAuth::getUser()->id;
+    }
+
+    public function scopeDefaultSort()
+    {
+        $options = request()->only(['type']);
+        return (!empty($options['type']) && $options['type'] == 1) ? 'title asc' : 'year desc';
     }
 
     /**

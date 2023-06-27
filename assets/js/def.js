@@ -8,4 +8,3 @@ function autoRequestFormLibrary() {
 document.addEventListener('DOMContentLoaded', function () {
     autoRequestFormLibrary();
 });
-
