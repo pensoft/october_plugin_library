@@ -15,6 +15,9 @@
             <a data-type="1" {% if currentType == 1 %} class="active"{% else %} {% endif%}>Deliverables</a>
             <a data-type="2" {% if currentType == 2 %} class="active"{% else %} {% endif%}>Relevant Publications</a>
             <a data-type="3" {% if currentType == 3 %} class="active"{% else %} {% endif%}>{{themeName}} Publications</a>
+            {% if __SELF__.property('milestones_filter') %}
+            <a data-type="4" {% if currentType == 4 %} class="active"{% else %} {% endif%}>Milestones</a>
+            {% endif %}
         </div>
         <input type="hidden" name="type" id="typeInput" value="{{ currentType }}">
     </form>

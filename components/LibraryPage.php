@@ -57,6 +57,11 @@ class LibraryPage extends ComponentBase
                 'type' => 'checkbox',
                 'default' => false
             ],
+            'milestones_filter' => [
+                'title' => 'Enable and disable milestones filtration',
+                'type' => 'checkbox',
+                'default' => false
+            ],
         ];
     }
 

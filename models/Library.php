@@ -30,12 +30,13 @@ class Library extends Model
     const TYPE_PRESENTATION = 8;
     const TYPE_OTHER = 9;
     const TYPE_PLEDGES = 10;
-
+    const TYPE_MILESTONE = 11;
 
     const SORT_TYPE_ALL = 0;
 	const SORT_TYPE_DELIVERABLES = 1;
 	const SORT_TYPE_RELEVANT_PUBLICATIONS = 2;
 	const SORT_TYPE_PROJECT_PUBLICATIONS = 3;
+    const SORT_TYPE_MILESTONES = 4;
 
     // Add  for revisions limit
     public $revisionableLimit = 200;
@@ -55,6 +56,7 @@ class Library extends Model
 		self::SORT_TYPE_DELIVERABLES => 'Deliverables',
 		self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
 		self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
+        self::SORT_TYPE_MILESTONES => 'Milestones'
     ];
 
     public function getSortTypesOptions(){
@@ -66,6 +68,7 @@ class Library extends Model
             self::SORT_TYPE_DELIVERABLES => 'Deliverables',
             self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
             self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
+            self::SORT_TYPE_MILESTONES => 'Milestones'
         ];
     }
 
@@ -148,6 +151,9 @@ class Library extends Model
                 break;
             case self::TYPE_PLEDGES:
                 return 'Pledges';
+                break;
+            case self::TYPE_MILESTONE:
+                return 'Milestone';
                 break;
         }
     }
@@ -249,6 +255,8 @@ class Library extends Model
         switch ($type) {
             case self::SORT_TYPE_DELIVERABLES:
                 return $query->ofType(self::TYPE_DELIVERABLE);
+            case self::SORT_TYPE_MILESTONES:
+                return $query->ofType(self::TYPE_MILESTONE);
             case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
                 return $query->where('type', '!=', self::TYPE_DELIVERABLE)
                     ->where('derived', self::DERIVED_NO);
