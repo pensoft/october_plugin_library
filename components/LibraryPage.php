@@ -146,7 +146,7 @@ class LibraryPage extends ComponentBase
         if ($options['type'] == 1){
             $library = $query->sortBy('title', 'asc');
         } else {
-            $library = $query->sortBy('title', 'desc');
+            $library = $query->sortBy('year', 'desc');
         }
 
         // Get the paginated result
