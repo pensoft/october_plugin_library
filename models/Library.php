@@ -3,11 +3,9 @@
 use Carbon\Carbon;
 use Model;
 use Cms\Classes\Theme;
-<<<<<<< Updated upstream
-=======
+
 use BackendAuth;
 use Validator;
->>>>>>> Stashed changes
 
 /**
  * Model
@@ -15,7 +13,7 @@ use Validator;
 class Library extends Model
 {
     use \October\Rain\Database\Traits\Validation;
-    
+
     const STATUS_PUBLISHED = 1;
     const STATUS_INPRESS = 2;
     const STATUS_INPREPARATION = 3;
@@ -30,14 +28,29 @@ class Library extends Model
     const TYPE_BOOK = 4;
     const TYPE_DELIVERABLE = 5;
     const TYPE_REPORT = 6;
+    const TYPE_VIDEO = 7;
+    const TYPE_PRESENTATION = 8;
+    const TYPE_OTHER = 9;
+    const TYPE_PLEDGES = 10;
+    const TYPE_MILESTONE = 11;
 
+    const SORT_TYPE_ALL = 0;
 	const SORT_TYPE_DELIVERABLES = 1;
 	const SORT_TYPE_RELEVANT_PUBLICATIONS = 2;
 	const SORT_TYPE_PROJECT_PUBLICATIONS = 3;
+    const SORT_TYPE_MILESTONES = 4;
+
+    // Add  for revisions limit
+    public $revisionableLimit = 200;
+
+    // Add for revisions on particular field
+    protected $revisionable = ["id", "title", "authors", "status", "year",];
 
     public static $allowSortingOptions = [
-        'year asc' => 'Year (asc)',
+        'title asc' => 'Title (asc)',
+        'title desc' => 'Title (desc)',
         'year desc' => 'Year (desc)',
+        'year asc' => 'Year (asc)',
     ];
 
     /**
@@ -58,22 +71,32 @@ class Library extends Model
         'pages',
         'doi'
     ];
-    
+
     public static $allowSortTypesOptions = [
+        self::SORT_TYPE_ALL => "All Documents",
 		self::SORT_TYPE_DELIVERABLES => 'Deliverables',
 		self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
 		self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
+        self::SORT_TYPE_MILESTONES => 'Milestones'
     ];
 
     public function getSortTypesOptions(){
-		$activeTheme = Theme::getActiveTheme();
-		$theme = $activeTheme->getConfig();
+        $activeTheme = Theme::getActiveTheme();
+        $theme = $activeTheme->getConfig();
         return
         [
+            self::SORT_TYPE_ALL => "All Documents",
             self::SORT_TYPE_DELIVERABLES => 'Deliverables',
             self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
             self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
+            self::SORT_TYPE_MILESTONES => 'Milestones'
         ];
+    }
+
+    public function scopeThemeName(){
+        $activeTheme = Theme::getActiveTheme();
+        $theme = $activeTheme->getConfig();
+        return strtoupper($theme['name']).' Publications';
     }
 
     /**
@@ -89,52 +112,72 @@ class Library extends Model
 
     public $attachOne = [
         'file' => 'System\Models\File',
-		'preview' => 'System\Models\File',
+        'preview' => 'System\Models\File',
     ];
     public $appends = [
-		'status_attr',
-		'derived_attr',
-		'year_attr',
-		'type_attr',
-		'date_attr',
-	];
+        'status_attr',
+        'derived_attr',
+        'year_attr',
+        'type_attr',
+        'date_attr',
+    ];
+
+    // Add  below relationship with Revision model
+    public $morphMany = [
+        'revision_history' => ['System\Models\Revision', 'name' => 'revisionable']
+    ];
 
     public function getDueDateAttribute($value)
     {
         return (new Carbon($value))->englishMonth;
     }
 
-	public function getYearAttrAttribute()
-	{
-		return (new Carbon($this->year))->year;
-	}
+    public function getYearAttrAttribute()
+    {
+        return (new Carbon($this->year))->year;
+    }
 
 
 
-	public function getTypeAttrAttribute()
-	{
-		switch ($this->type){
-			case self::TYPE_JOURNAL_PAPER:
-				return 'Journal paper';
-				break;
-			case self::TYPE_PROCEEDINGS_PAPER:
-				return 'Proceedings paper';
-				break;
-			case self::TYPE_BOOK_CHAPTER:
-				return 'Book chapter';
-				break;
-			case self::TYPE_BOOK:
-				return 'Book';
-				break;
-			case self::TYPE_DELIVERABLE:
-			default:
-				return 'Deliverable';
-				break;
-			case self::TYPE_REPORT:
-				return 'Report';
-				break;
-		}
-	}
+    public function getTypeAttrAttribute()
+    {
+        switch ($this->type){
+            case self::TYPE_JOURNAL_PAPER:
+                return 'Journal paper';
+                break;
+            case self::TYPE_PROCEEDINGS_PAPER:
+                return 'Proceedings paper';
+                break;
+            case self::TYPE_BOOK_CHAPTER:
+                return 'Book chapter';
+                break;
+            case self::TYPE_BOOK:
+                return 'Book';
+                break;
+            case self::TYPE_DELIVERABLE:
+            default:
+                return 'Deliverable';
+                break;
+            case self::TYPE_REPORT:
+                return 'Report';
+                break;
+            case self::TYPE_VIDEO:
+                return 'Video';
+                break;
+            case self::TYPE_PRESENTATION:
+                return 'Presentation';
+                break;
+            case self::TYPE_OTHER:
+                return 'Other';
+                break;
+            case self::TYPE_PLEDGES:
+                return 'Pledges';
+                break;
+            case self::TYPE_MILESTONE:
+                return 'Milestone';
+                break;
+        }
+    }
 
     public function getDateAttrAttribute()
     {
@@ -174,38 +217,52 @@ class Library extends Model
         $query->where('is_visible', true);
     }
 
-    public function scopeOfType($query, $type){
+    public function scopeOfType($query, $type)
+    {
         return $query->where('type', $type);
     }
 
-    public function scopeListFrontEnd($query, $options = []){
-        extract(
-            array_merge([
-                'sort' => 'created_at desc',
-                'type' => 0,
-            ], $options)
-        );
+    // Add below function use for get current user details
+    public function diff()
+    {
+        $history = $this->revision_history;
+    }
 
-        switch ($type){
-			case self::SORT_TYPE_DELIVERABLES:
-				$query->ofType(self::TYPE_DELIVERABLE);
-				break;
-			case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
-                $query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_NO);
-				break;
-			case self::SORT_TYPE_PROJECT_PUBLICATIONS:
-				$query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_YES);
-				break;
-		}
+    public function getRevisionableUser()
+    {
+        return BackendAuth::getUser()->id;
+    }
 
-        if(in_array($sort, array_keys(self::$allowSortingOptions))){
-            $parts = explode(' ', $sort);
-            list($sortField, $sortDirection) = $parts;
-            $query->orderBy($sortField, $sortDirection);
+    public function scopeDefaultSort()
+    {
+        $options = request()->only(['type']);
+        return (!empty($options['type']) && $options['type'] == 1) ? 'title asc' : 'year desc';
+    }
+
+    /**
+     * Scope to sort records
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $field
+     * @param string $direction
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSortBy($query, $field, $direction)
+    {
+        if ($field === 'title') {
+            return $query->fromSub(function ($query) use ($direction) {
+                $query->from('pensoft_library_records')
+                    ->selectRaw("*,
+                                substring(title, '^([^0-9]*)') as title_start,
+                                regexp_split_to_array(substring(title, '(\d+(\.\d+)?)'), '\.') as title_numbers");
+            }, 'subquery')
+                ->orderByRaw("title_start " . $direction)
+                ->orderByRaw("cast(title_numbers[1] as integer) " . $direction)
+                ->orderByRaw("CASE WHEN array_length(title_numbers, 1) > 1 THEN cast(title_numbers[2] as integer) END " . $direction);
+        } else {
+            return $query->orderBy($field, $direction);
         }
     }
-<<<<<<< Updated upstream
-=======
 
     /**
      * Scope to filter records by type
@@ -293,5 +350,4 @@ class Library extends Model
             }
         );
     }
->>>>>>> Stashed changes
 }

@@ -33,6 +33,7 @@
 				{% partial __SELF__ ~ "::libraries-content" label="Publisher:"|_ value=record.publisher  %}
 				{% partial __SELF__ ~ "::libraries-content" label="Place:"|_ value=record.place  %}
 				{% partial __SELF__ ~ "::libraries-content" label="City:"|_ value=record.city  %}
+
 				{% partial __SELF__ ~ "::libraries-content" label="Pages:" value=record.pages  %}
 				<br>{% partial __SELF__ ~ "::libraries-content" label="URL/DOI:" value=record.doi is_link=true  %}
 			</div>

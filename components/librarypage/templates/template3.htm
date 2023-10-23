@@ -30,6 +30,7 @@
 				{% partial __SELF__ ~ "::libraries-content" label="City:"|_ value=record.city  %}
 				{% partial __SELF__ ~ "::libraries-content" label="Pages:"|_ value=record.pages  %}
 				<br>{% partial __SELF__ ~ "::libraries-content" label="URL/DOI:"|_ value=record.doi is_link=true  %}
+
 			</div>
 		</div>
 		{%if record.file %}
@@ -38,6 +39,7 @@
                 <a target="_blank" href="{{ 'file-download'|page({'id': record.file.id}) }}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>{{'Download' |_}}  ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
                 {% else %}
                 <a target="_blank" href="{{record.file.path()}}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>{{'Download' |_}}  ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
+
                 {% endif %}
 			</div>
 		{%endif%}

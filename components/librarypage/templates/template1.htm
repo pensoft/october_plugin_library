@@ -9,6 +9,7 @@
 			<h3 class="card-title">{{ record.title }}</h3>
 		</div>
 		<div class="body">
+
 			{% partial __SELF__ ~ "::libraries-content" label="Authors:"|_ value=record.authors %}
 
             {% if record.type == 5 %}
