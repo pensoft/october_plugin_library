@@ -3,6 +3,11 @@
 use Carbon\Carbon;
 use Model;
 use Cms\Classes\Theme;
+<<<<<<< Updated upstream
+=======
+use BackendAuth;
+use Validator;
+>>>>>>> Stashed changes
 
 /**
  * Model
@@ -35,6 +40,25 @@ class Library extends Model
         'year desc' => 'Year (desc)',
     ];
 
+    /**
+     * @var array Translatable fields
+     */
+    public $translatable = [
+        'title',
+        'type',
+        'authors',
+        'journal_title',
+        'proceedings_title',
+        'monograph_title',
+        'project_title',
+        'volume_issue',
+        'publisher',
+        'place',
+        'city',
+        'pages',
+        'doi'
+    ];
+    
     public static $allowSortTypesOptions = [
 		self::SORT_TYPE_DELIVERABLES => 'Deliverables',
 		self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
@@ -180,4 +204,94 @@ class Library extends Model
             $query->orderBy($sortField, $sortDirection);
         }
     }
+<<<<<<< Updated upstream
+=======
+
+    /**
+     * Scope to filter records by type
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilterByType($query, $type)
+    {
+        switch ($type) {
+            case self::SORT_TYPE_DELIVERABLES:
+                return $query->ofType(self::TYPE_DELIVERABLE);
+            case self::SORT_TYPE_MILESTONES:
+                return $query->ofType(self::TYPE_MILESTONE);
+            case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
+                return $query->where('type', '!=', self::TYPE_DELIVERABLE)
+                    ->where('derived', self::DERIVED_NO);
+            case self::SORT_TYPE_PROJECT_PUBLICATIONS:
+                return $query->where('type', '!=', self::TYPE_DELIVERABLE)
+                    ->where('derived', self::DERIVED_YES);
+            case "0":
+                return $query;
+        }
+
+    }
+
+    /**
+     * Scope to search in records
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $searchTerm
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearch($query, $searchTerm)
+    {
+        if (!$searchTerm) {
+            return $query;
+        }
+        return $query->where(function ($query) use ($searchTerm) {
+            $query->where('title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orwhere('authors', 'iLIKE', '%' . $searchTerm . '%')
+                ->orwhere('journal_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('proceedings_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('monograph_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('deliverable_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('project_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orwhere('publisher', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('place', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('city', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('doi', 'iLIKE', '%' . $searchTerm . '%');
+        });
+    }
+
+    /**
+     * Add translation support to this model, if available.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        Validator::extend(
+            'json',
+            function ($attribute, $value, $parameters) {
+                json_decode($value);
+
+                return json_last_error() == JSON_ERROR_NONE;
+            }
+        );
+
+        // Call default functionality (required)
+        parent::boot();
+
+        // Check the translate plugin is installed
+        if (!class_exists('RainLab\Translate\Behaviors\TranslatableModel')) {
+            return;
+        }
+
+        // Extend the constructor of the model
+        self::extend(
+            function ($model) {
+
+                // Implement the translatable behavior
+                $model->implement[] = 'RainLab.Translate.Behaviors.TranslatableModel';
+            }
+        );
+    }
+>>>>>>> Stashed changes
 }
