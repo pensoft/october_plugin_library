@@ -74,9 +74,9 @@ class Library extends Model
 
     public static $allowSortTypesOptions = [
         self::SORT_TYPE_ALL => "All Documents",
-        self::SORT_TYPE_DELIVERABLES => 'Deliverables',
-        self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
-        self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
+		self::SORT_TYPE_DELIVERABLES => 'Deliverables',
+		self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
+		self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
         self::SORT_TYPE_MILESTONES => 'Milestones'
     ];
 
@@ -84,13 +84,13 @@ class Library extends Model
         $activeTheme = Theme::getActiveTheme();
         $theme = $activeTheme->getConfig();
         return
-            [
-                self::SORT_TYPE_ALL => "All Documents",
-                self::SORT_TYPE_DELIVERABLES => 'Deliverables',
-                self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
-                self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
-                self::SORT_TYPE_MILESTONES => 'Milestones'
-            ];
+        [
+            self::SORT_TYPE_ALL => "All Documents",
+            self::SORT_TYPE_DELIVERABLES => 'Deliverables',
+            self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
+            self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
+            self::SORT_TYPE_MILESTONES => 'Milestones'
+        ];
     }
 
     public function scopeThemeName(){

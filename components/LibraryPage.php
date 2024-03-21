@@ -2,6 +2,7 @@
 
 namespace Pensoft\Library\Components;
 
+use Cms\Classes\Theme;
 use Backend\Facades\BackendAuth;
 use \Cms\Classes\ComponentBase;
 use Pensoft\Library\Classes\ZipFiles;
@@ -22,10 +23,14 @@ class LibraryPage extends ComponentBase
 
 		// by default users are not logged in
 		$this->loggedIn = false;
-		// end then if getUser returns other value than NULL then our user is logged in
+
+		// then if getUser returns other value than NULL then our user is logged in
 		if (!empty(BackendAuth::getUser())) {
 			$this->loggedIn = true;
 		}
+
+        $this->page['themeName'] = Theme::getActiveTheme()->getConfig()['name'];
+
     }
 
     /**
@@ -53,9 +58,19 @@ class LibraryPage extends ComponentBase
             ],
 			'no_records_message' => [
 				'title' => 'No records message',
-				'description' => 'Message to be displeyed when no listems are added',
+				'description' => 'Message to be displayed when no list items are added',
 				'default' => 'No records found',
 			],
+            'redirect_to_download_page' => [
+                'title' => 'Download file via file-download page',
+                'type' => 'checkbox',
+                'default' => false
+            ],
+            'milestones_filter' => [
+                'title' => 'Enable and disable milestones filtration',
+                'type' => 'checkbox',
+                'default' => false
+            ],
         ];
     }
 
@@ -67,6 +82,7 @@ class LibraryPage extends ComponentBase
             'template3' => 'Template 3',
             'template4' => 'Template 4',
             'template5' => 'Template 5',
+            'template6' => 'Template 6',
         ];
     }
 
@@ -77,7 +93,7 @@ class LibraryPage extends ComponentBase
             'description' => 'Displays a collection of libraries.'
         ];
     }
-
+    
     /**
      * Prepares the variables needed by the component's default.htm template.
      *
@@ -161,6 +177,7 @@ class LibraryPage extends ComponentBase
      * This method aggregates all library items into a single ZIP file and triggers the download for the user.
      * It sets appropriate headers to initiate the download process.
      */
+
 
     public function onDownloadAll()
     {

@@ -1,15 +1,3 @@
-
-// function autoRequestFormLibrary() {
-//     $('#libraryForm').on('change', 'input, select', function () {
-//         var $form = $(this).closest('form');
-//
-//         $form.request();
-//     })
-// }
-// document.addEventListener('DOMContentLoaded', function () {
-//     autoRequestFormLibrary();
-// });
-
 $(document).ready(function() {
     function toggleClearButtonVisibility() {
         if ($('.form-control.search').val()) {
