@@ -4,6 +4,9 @@ use Carbon\Carbon;
 use Model;
 use Cms\Classes\Theme;
 
+use BackendAuth;
+use Validator;
+
 /**
  * Model
  */
@@ -39,12 +42,41 @@ class Library extends Model
     const SORT_TYPE_MILESTONES = 4;
     const SORT_TYPE_FEATURES = 5;
 
+
+    // Add  for revisions limit
+    public $revisionableLimit = 200;
+
+    // Add for revisions on particular field
+    protected $revisionable = ["id", "title", "authors", "status", "year",];
+
     public static $allowSortingOptions = [
-        'year asc' => 'Year (asc)',
+        'title asc' => 'Title (asc)',
+        'title desc' => 'Title (desc)',
         'year desc' => 'Year (desc)',
+        'year asc' => 'Year (asc)',
+    ];
+
+    /**
+     * @var array Translatable fields
+     */
+    public $translatable = [
+        'title',
+        'type',
+        'authors',
+        'journal_title',
+        'proceedings_title',
+        'monograph_title',
+        'project_title',
+        'volume_issue',
+        'publisher',
+        'place',
+        'city',
+        'pages',
+        'doi'
     ];
 
     public static $allowSortTypesOptions = [
+        self::SORT_TYPE_ALL => "All Documents",
 		self::SORT_TYPE_DELIVERABLES => 'Deliverables',
 		self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
 		self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
@@ -53,16 +85,23 @@ class Library extends Model
     ];
 
     public function getSortTypesOptions(){
-		$activeTheme = Theme::getActiveTheme();
-		$theme = $activeTheme->getConfig();
+        $activeTheme = Theme::getActiveTheme();
+        $theme = $activeTheme->getConfig();
         return
         [
+            self::SORT_TYPE_ALL => "All Documents",
             self::SORT_TYPE_DELIVERABLES => 'Deliverables',
             self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
             self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
             self::SORT_TYPE_MILESTONES => 'Milestones',
             self::SORT_TYPE_FEATURES => 'Features'
         ];
+    }
+
+    public function scopeThemeName(){
+        $activeTheme = Theme::getActiveTheme();
+        $theme = $activeTheme->getConfig();
+        return strtoupper($theme['name']).' Publications';
     }
 
     /**
@@ -78,15 +117,20 @@ class Library extends Model
 
     public $attachOne = [
         'file' => 'System\Models\File',
-		'preview' => 'System\Models\File',
+        'preview' => 'System\Models\File',
     ];
     public $appends = [
-		'status_attr',
-		'derived_attr',
-		'year_attr',
-		'type_attr',
-		'date_attr',
-	];
+        'status_attr',
+        'derived_attr',
+        'year_attr',
+        'type_attr',
+        'date_attr',
+    ];
+
+    // Add  below relationship with Revision model
+    public $morphMany = [
+        'revision_history' => ['System\Models\Revision', 'name' => 'revisionable']
+    ];
 
     public function getDueDateAttribute($value)
     {
@@ -181,7 +225,8 @@ class Library extends Model
         $query->where('is_visible', true);
     }
 
-    public function scopeOfType($query, $type){
+    public function scopeOfType($query, $type)
+    {
         return $query->where('type', $type);
     }
 

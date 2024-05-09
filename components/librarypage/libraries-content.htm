@@ -1,7 +1,7 @@
 {% if value %}
 <div>
     {% if label %}
-    <span class="text-bold">{{label}}</span>
+    <span class="text-bold">{{label |_}}</span>
     {% endif %}
     {% if is_link %}
         <span class="text-ligth"><a target="_blank" href="{{value}}" class="break-word">{{value}}</a></span>

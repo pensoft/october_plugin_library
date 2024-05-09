@@ -99,7 +99,7 @@ fields:
         disabled: 0
         type: switch
     monograph_title:
-        label: 'Monograph Title'
+        label: 'Monograph Titl}'
         span: left
         trigger:
             action: show

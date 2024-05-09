@@ -2,6 +2,7 @@
 
 namespace Pensoft\Library\Components;
 
+use Cms\Classes\Theme;
 use Backend\Facades\BackendAuth;
 use \Cms\Classes\ComponentBase;
 use Pensoft\Library\Classes\ZipFiles;
@@ -11,6 +12,10 @@ class LibraryPage extends ComponentBase
 {
 	public $loggedIn;
 
+    /**
+     * Component initialization.
+     * Sets up JS, prepares vars for the component, and checks user authentication status.
+     */
     public function onRun()
     {
         $this->addJs('assets/js/def.js');
@@ -18,12 +23,21 @@ class LibraryPage extends ComponentBase
 
 		// by default users are not logged in
 		$this->loggedIn = false;
-		// end then if getUser returns other value than NULL then our user is logged in
+
+		// then if getUser returns other value than NULL then our user is logged in
 		if (!empty(BackendAuth::getUser())) {
 			$this->loggedIn = true;
 		}
+
+        $this->page['themeName'] = Theme::getActiveTheme()->getConfig()['name'];
+
     }
 
+    /**
+     * Defines the component's properties.
+     *
+     * @return array The properties array.
+     */
     public function defineProperties()
     {
         return [
@@ -44,7 +58,7 @@ class LibraryPage extends ComponentBase
             ],
 			'no_records_message' => [
 				'title' => 'No records message',
-				'description' => 'Message to be displeyed when no listems are added',
+				'description' => 'Message to be displayed when no list items are added',
 				'default' => 'No records found',
 			],
             'redirect_to_download_page' => [
@@ -73,6 +87,7 @@ class LibraryPage extends ComponentBase
             'template3' => 'Template 3',
             'template4' => 'Template 4',
             'template5' => 'Template 5',
+            'template6' => 'Template 6',
         ];
     }
 
@@ -84,36 +99,90 @@ class LibraryPage extends ComponentBase
         ];
     }
 
-    public function prepareVars()
+    /**
+     * Prepares the variables needed by the component's default.htm template.
+     *
+     * This method fetches library items based on applied filters, sorting, and pagination settings,
+     * and prepares them for display.
+     */
+    protected function prepareVars()
     {
-        $options = post('Filter', []);
+        $options = $this->getRequestOptions();
+        $query = $this->applyFilters($options);
 
-        $library = Library::isVisible()->listFrontEnd($options);
+        $library = $query->paginate($options['perPage'], $options['page'])->appends(request()->query());
 
-		if($query = get('query')){
-			$library = $library->where('title', 'iLIKE', '%' . $query . '%')
-				->orwhere('authors', 'iLIKE', '%' . $query . '%')
-				->orwhere('journal_title', 'iLIKE', '%' . $query . '%')
-				->orwhere('publisher', 'iLIKE', '%' . $query . '%')
-			;
-		}
+        $this->page['records'] = $library;
+        $this->setPageVariables($library, $options);
+    }
 
-        $this->page['records'] = $library->get();
+    /**
+     * Retrieves request parameters and provides defaults.
+     *
+     * This method dynamically sets the default sort order based on the document type.
+     *
+     * @return array The array of request options including page, perPage, type, sort, and search.
+     */
+    protected function getRequestOptions()
+    {
+        $type = request()->get('type', '0');
+        $defaultSort = $type == '1' ? 'title asc' : 'year desc';
+
+        return request()->only(['page', 'perPage', 'search']) + [
+            'page' => '1',
+            'perPage' => '15',
+            'type' => $type,
+            'sort' => request('Filter.sort', $defaultSort),
+            'search' => request()->get('search'),
+        ];
+    }
+
+    /**
+     * Applies filters based on the request options to the library items query.
+     *
+     * @param array $options The array of request options.
+     * @return \October\Rain\Database\Builder The query builder after filters have been applied.
+     */
+    protected function applyFilters($options)
+    {
+        $query = Library::isVisible();
+
+        if (!empty($options['search'])) {
+            $query = $query->search($options['search']);
+        }
+
+        if (!empty($options['type'])) {
+            $query = $query->filterBy($options['type']);
+        }
+
+        if (!empty($options['sort'])) {
+            [$sortField, $sortDirection] = explode(' ', $options['sort'], 2);
+            $query = $query->sortBy($sortField, $sortDirection)->orderBy('id', 'asc');
+        }
+
+        return $query;
+    }
+
+    protected function setPageVariables($library, $options)
+    {
         $this->page['sortOptions'] = Library::$allowSortingOptions;
         $this->page['sortTypesOptions'] = (new Library())->getSortTypesOptions();
-        $this->page['total_file_size_bites'] = $this->page['records']->reduce(function ($carry, $item) {
-            if ($item->file) {
-                return $carry + $item->file->file_size;
-            }
-            return $carry;
+        $this->page['total_file_size_bites'] = $library->reduce(function ($carry, $item) {
+            return $carry + ($item->file ? $item->file->file_size : 0);
         }, 0);
         $this->page['total_file_size'] = $this->page['total_file_size_bites'];
+        $this->page['searchQuery'] = $options['search'];
+        $this->page['currentType'] = $options['type'];
+        $this->page['currentSort'] = $options['sort'];
     }
 
-    public function onFilterRecords()
-    {
-        $this->prepareVars();
-    }
+    /**
+     * Handles the download action for all library items.
+     *
+     * This method aggregates all library items into a single ZIP file and triggers the download for the user.
+     * It sets appropriate headers to initiate the download process.
+     */
+
 
     public function onDownloadAll()
     {
@@ -126,7 +195,8 @@ class LibraryPage extends ComponentBase
         exit;
     }
 
-    public function hasLibrary(){
+    public function hasLibrary()
+    {
         return Library::exists();
     }
 }
