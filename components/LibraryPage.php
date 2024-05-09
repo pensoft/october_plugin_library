@@ -47,6 +47,21 @@ class LibraryPage extends ComponentBase
 				'description' => 'Message to be displeyed when no listems are added',
 				'default' => 'No records found',
 			],
+            'redirect_to_download_page' => [
+                'title' => 'Download file via file-download page',
+                'type' => 'checkbox',
+                'default' => false
+            ],
+            'milestones_filter' => [
+                'title' => 'Enable and disable milestones filtration',
+                'type' => 'checkbox',
+                'default' => false
+            ],
+            'features_filter' => [
+                'title' => 'Enable and disable features filtration',
+                'type' => 'checkbox',
+                'default' => false
+            ],
         ];
     }
 

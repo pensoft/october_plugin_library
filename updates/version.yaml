@@ -34,3 +34,39 @@
     - 'Fixed template 5'
 1.0.17:
     - 'Fixed types labes'
+1.0.18:
+    - 'Template 6'
+1.0.19:
+    - 'Download via download-file page'
+1.0.20:
+    - 'Revision history'
+1.0.21:
+    - 'Revision history revisionable params'
+1.0.22:
+    - 'Fixed search'
+1.0.23:
+    - 'Fixed search and order'
+1.0.24:
+    - 'Fixed deliverables order'
+1.0.25:
+    - 'Fixed serach, sort, folter, paging'
+1.0.26:
+    - 'Removed download all btn'
+1.0.27:
+    - 'FIxed download'
+1.0.28:
+    - 'FIxed tab active state'
+1.0.29:
+    - 'FIxed tab active state'
+1.0.30:
+    - 'Added default sort, updated forms, modified logic'
+1.0.31:
+    - 'Added milestones'
+1.0.32:
+    - 'Fix'
+1.0.33:
+    - 'Translate'
+1.0.34:
+    - 'Pagination logic FIX'
+1.0.35:
+    - 'Add features filter'

@@ -29,10 +29,15 @@ class Library extends Model
     const TYPE_PRESENTATION = 8;
     const TYPE_OTHER = 9;
     const TYPE_PLEDGES = 10;
+    const TYPE_MILESTONE = 11;
+    const TYPE_FEATURE = 12;
 
-	const SORT_TYPE_DELIVERABLES = 1;
-	const SORT_TYPE_RELEVANT_PUBLICATIONS = 2;
-	const SORT_TYPE_PROJECT_PUBLICATIONS = 3;
+    const SORT_TYPE_ALL = 0;
+    const SORT_TYPE_DELIVERABLES = 1;
+    const SORT_TYPE_RELEVANT_PUBLICATIONS = 2;
+    const SORT_TYPE_PROJECT_PUBLICATIONS = 3;
+    const SORT_TYPE_MILESTONES = 4;
+    const SORT_TYPE_FEATURES = 5;
 
     public static $allowSortingOptions = [
         'year asc' => 'Year (asc)',
@@ -43,6 +48,8 @@ class Library extends Model
 		self::SORT_TYPE_DELIVERABLES => 'Deliverables',
 		self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
 		self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
+        self::SORT_TYPE_MILESTONES => 'Milestones',
+        self::SORT_TYPE_FEATURES => 'Features'
     ];
 
     public function getSortTypesOptions(){
@@ -53,6 +60,8 @@ class Library extends Model
             self::SORT_TYPE_DELIVERABLES => 'Deliverables',
             self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
             self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
+            self::SORT_TYPE_MILESTONES => 'Milestones',
+            self::SORT_TYPE_FEATURES => 'Features'
         ];
     }
 
@@ -84,49 +93,55 @@ class Library extends Model
         return (new Carbon($value))->englishMonth;
     }
 
-	public function getYearAttrAttribute()
-	{
-		return (new Carbon($this->year))->year;
-	}
+    public function getYearAttrAttribute()
+    {
+        return (new Carbon($this->year))->year;
+    }
 
 
 
-	public function getTypeAttrAttribute()
-	{
-		switch ($this->type){
-			case self::TYPE_JOURNAL_PAPER:
-				return 'Journal paper';
-				break;
-			case self::TYPE_PROCEEDINGS_PAPER:
-				return 'Proceedings paper';
-				break;
-			case self::TYPE_BOOK_CHAPTER:
-				return 'Book chapter';
-				break;
-			case self::TYPE_BOOK:
-				return 'Book';
-				break;
-			case self::TYPE_DELIVERABLE:
-			default:
-				return 'Deliverable';
-				break;
-			case self::TYPE_REPORT:
-				return 'Report';
-				break;
-			case self::TYPE_VIDEO:
-				return 'Video';
-				break;
-			case self::TYPE_PRESENTATION:
-				return 'Presentation';
-				break;
-			case self::TYPE_OTHER:
-				return 'Other';
-				break;
-			case self::TYPE_PLEDGES:
-				return 'Pledges';
-				break;
-		}
-	}
+    public function getTypeAttrAttribute()
+    {
+        switch ($this->type){
+            case self::TYPE_JOURNAL_PAPER:
+                return 'Journal paper';
+                break;
+            case self::TYPE_PROCEEDINGS_PAPER:
+                return 'Proceedings paper';
+                break;
+            case self::TYPE_BOOK_CHAPTER:
+                return 'Book chapter';
+                break;
+            case self::TYPE_BOOK:
+                return 'Book';
+                break;
+            case self::TYPE_DELIVERABLE:
+            default:
+                return 'Deliverable';
+                break;
+            case self::TYPE_REPORT:
+                return 'Report';
+                break;
+            case self::TYPE_VIDEO:
+                return 'Video';
+                break;
+            case self::TYPE_PRESENTATION:
+                return 'Presentation';
+                break;
+            case self::TYPE_OTHER:
+                return 'Other';
+                break;
+            case self::TYPE_PLEDGES:
+                return 'Pledges';
+                break;
+            case self::TYPE_MILESTONE:
+                return 'Milestone';
+                break;
+            case self::TYPE_FEATURE:
+                return 'Feature';
+                break;
+        }
+    }
 
     public function getDateAttrAttribute()
     {
@@ -170,30 +185,136 @@ class Library extends Model
         return $query->where('type', $type);
     }
 
-    public function scopeListFrontEnd($query, $options = []){
-        extract(
-            array_merge([
-                'sort' => 'created_at desc',
-                'type' => 0,
-            ], $options)
+    // Add below function use for get current user details
+    public function diff()
+    {
+        $history = $this->revision_history;
+    }
+
+    public function getRevisionableUser()
+    {
+        return BackendAuth::getUser()->id;
+    }
+
+    public function scopeDefaultSort()
+    {
+        $options = request()->only(['type']);
+        return (!empty($options['type']) && $options['type'] == 1) ? 'title asc' : 'year desc';
+    }
+
+    /**
+     * Scope to sort records
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $field
+     * @param string $direction
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSortBy($query, $field, $direction)
+    {
+        if ($field === 'title') {
+            return $query->fromSub(function ($query) use ($direction) {
+                $query->from('pensoft_library_records')
+                    ->selectRaw("*,
+                                substring(title, '^([^0-9]*)') as title_start,
+                                regexp_split_to_array(substring(title, '(\d+(\.\d+)?)'), '\.') as title_numbers");
+            }, 'subquery')
+                ->orderByRaw("title_start " . $direction)
+                ->orderByRaw("cast(title_numbers[1] as integer) " . $direction)
+                ->orderByRaw("CASE WHEN array_length(title_numbers, 1) > 1 THEN cast(title_numbers[2] as integer) END " . $direction);
+        } else {
+            return $query->orderBy($field, $direction);
+        }
+    }
+
+    /**
+     * Scope to filter records by type
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilterBy($query, $type)
+    {
+        switch ($type) {
+            case self::SORT_TYPE_DELIVERABLES:
+                return $query->ofType(self::TYPE_DELIVERABLE);
+            case self::SORT_TYPE_MILESTONES:
+                return $query->ofType(self::TYPE_MILESTONE);
+            case self::SORT_TYPE_FEATURES:
+                return $query->ofType(self::TYPE_FEATURE);
+            case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
+                return $query->where('type', '!=', self::TYPE_DELIVERABLE)
+                    ->where('type', '!=', self::TYPE_FEATURE)
+                    ->where('derived', self::DERIVED_NO);
+            case self::SORT_TYPE_PROJECT_PUBLICATIONS:
+                return $query->where('type', '!=', self::TYPE_DELIVERABLE)
+                    ->where('type', '!=', self::TYPE_FEATURE)
+                    ->where('derived', self::DERIVED_YES);
+            case "0":
+                return $query;
+        }
+
+    }
+
+    /**
+     * Scope to search in records
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $searchTerm
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearch($query, $searchTerm)
+    {
+        if (!$searchTerm) {
+            return $query;
+        }
+        return $query->where(function ($query) use ($searchTerm) {
+            $query->where('title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orwhere('authors', 'iLIKE', '%' . $searchTerm . '%')
+                ->orwhere('journal_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('proceedings_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('monograph_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('deliverable_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('project_title', 'iLIKE', '%' . $searchTerm . '%')
+                ->orwhere('publisher', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('place', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('city', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('doi', 'iLIKE', '%' . $searchTerm . '%');
+        });
+    }
+
+    /**
+     * Add translation support to this model, if available.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        Validator::extend(
+            'json',
+            function ($attribute, $value, $parameters) {
+                json_decode($value);
+
+                return json_last_error() == JSON_ERROR_NONE;
+            }
         );
 
-        switch ($type){
-			case self::SORT_TYPE_DELIVERABLES:
-				$query->ofType(self::TYPE_DELIVERABLE);
-				break;
-			case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
-                $query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_NO);
-				break;
-			case self::SORT_TYPE_PROJECT_PUBLICATIONS:
-				$query->ofType(self::TYPE_JOURNAL_PAPER)->where('derived', self::DERIVED_YES);
-				break;
-		}
+        // Call default functionality (required)
+        parent::boot();
 
-        if(in_array($sort, array_keys(self::$allowSortingOptions))){
-            $parts = explode(' ', $sort);
-            list($sortField, $sortDirection) = $parts;
-            $query->orderBy($sortField, $sortDirection);
+        // Check the translate plugin is installed
+        if (!class_exists('RainLab\Translate\Behaviors\TranslatableModel')) {
+            return;
         }
+
+        // Extend the constructor of the model
+        self::extend(
+            function ($model) {
+
+                // Implement the translatable behavior
+                $model->implement[] = 'RainLab.Translate.Behaviors.TranslatableModel';
+            }
+        );
     }
 }
