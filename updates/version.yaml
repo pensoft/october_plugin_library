@@ -70,3 +70,5 @@
     - 'Pagination logic FIX'
 1.0.35:
     - 'Add features filter'
+1.1.0:
+    - 'Migration fixes'

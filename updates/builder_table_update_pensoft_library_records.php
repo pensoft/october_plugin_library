@@ -15,9 +15,9 @@ class BuilderTableUpdatePensoftLibraryRecords extends Migration
     
     public function down()
     {
-        Schema::table('pensoft_library_records', function($table)
-        {
-            $table->integer('pages')->nullable(false)->unsigned(false)->default(0)->change();
-        });
+        // Schema::table('pensoft_library_records', function($table)
+        // {
+        //     $table->integer('pages')->nullable(false)->unsigned(false)->default(0)->change();
+        // });
     }
 }
