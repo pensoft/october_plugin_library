@@ -5,6 +5,18 @@
 			<div class="library-type-label">
                 <span class="doc_type">{{record.type_attr}}</span></div>
 			<h3 class="card-title">{{ record.title }}</h3>
+
+			{% if record.description or record.keywords %}
+			<div class="row body-description">
+				<div class="desc-item">
+					{% partial __SELF__ ~ "::libraries-content" label="Description:"|_ value=record.description %}
+				</div>
+				<div class="desc-item">
+					{% partial __SELF__ ~ "::libraries-content" label="Keywords:"|_ value=record.keywords %}
+				</div>
+			</div>
+			{% endif %}
+
 			<div class="body">
 				{% partial __SELF__ ~ "::libraries-content" label="Authors:" value=record.authors %}<br>
 

@@ -173,3 +173,13 @@ fields:
             extension: auto
         span: auto
         type: fileupload
+    keywords:
+        label: Keywords
+        type: textarea
+        size: large
+        span: auto
+    description:
+        label: Description
+        type: textarea
+        size: large
+        span: auto
