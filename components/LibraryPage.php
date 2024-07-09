@@ -168,6 +168,7 @@ class LibraryPage extends ComponentBase
         return $query;
     }
 
+
     protected function setPageVariables($library, $options)
     {
         $this->page['sortOptions'] = Library::$allowSortingOptions;

@@ -3,31 +3,43 @@
 		<div class="col-md-9 col-xs-12">
 			<h3 class="card-title">{{ record.title }}</h3>
 			<div class="body">
-				{% partial __SELF__ ~ "::libraries-content" label="Authors:" value=record.authors %}<br>
+				{% partial __SELF__ ~ "::libraries-content" label="Authors:"|_ value=record.authors %}<br>
 
-				{% partial __SELF__ ~ "::libraries-content" label="Status:" value=record.status_attr %}
-				{% partial __SELF__ ~ "::libraries-content" label="Year:" value=record.year_attr %}
+                {% if record.type == 5 %}
+                {% if record.status == 1 %}
+                {% set status = 'Approved' %}
+                {% else %}
+                {% set status = 'Subject to change' %}
+                {% endif %}
+                {% else %}
+                {% set status = record.status_attr %}
+                {% endif %}
 
-				{% partial __SELF__ ~ "::libraries-content" label="Journal:" value=record.journal_title %}
-				{% partial __SELF__ ~ "::libraries-content" label="Proceedings:" value=record.proceedings_title %}
-				{% partial __SELF__ ~ "::libraries-content" label="Monograph:" value=record.monograph_title %}
-				{% partial __SELF__ ~ "::libraries-content" label="Deliverable number:" value=record.deliverable_title %}
-				{% partial __SELF__ ~ "::libraries-content" label="Project:" value=record.project_title %}
+                {% partial __SELF__ ~ "::libraries-content" label="Status:"|_ value=status %}
+				{% partial __SELF__ ~ "::libraries-content" label="Year:"|_ value=record.year_attr %}
 
-				{% partial __SELF__ ~ "::libraries-content" label="Volume/Issue:" value=record.volume_issue %}
-				{% partial __SELF__ ~ "::libraries-content" label="Publisher:" value=record.publisher  %}
-				{% partial __SELF__ ~ "::libraries-content" label="Place:" value=record.place  %}
-				{% partial __SELF__ ~ "::libraries-content" label="City:" value=record.city  %}
-				{% partial __SELF__ ~ "::libraries-content" label="Pages:" value=record.pages  %}
-				<br>{% partial __SELF__ ~ "::libraries-content" label="URL/DOI:" value=record.doi is_link=true  %}
+				{% partial __SELF__ ~ "::libraries-content" label="Journal:"|_ value=record.journal_title %}
+				{% partial __SELF__ ~ "::libraries-content" label="Proceedings:"|_ value=record.proceedings_title %}
+				{% partial __SELF__ ~ "::libraries-content" label="Monograph:"|_ value=record.monograph_title %}
+				{% partial __SELF__ ~ "::libraries-content" label="Deliverable number:"|_ value=record.deliverable_title %}
+				{% partial __SELF__ ~ "::libraries-content" label="Project:"|_ value=record.project_title %}
+
+				{% partial __SELF__ ~ "::libraries-content" label="Volume/Issue:"|_ value=record.volume_issue %}
+				{% partial __SELF__ ~ "::libraries-content" label="Publisher:"|_ value=record.publisher  %}
+				{% partial __SELF__ ~ "::libraries-content" label="Place:"|_ value=record.place  %}
+				{% partial __SELF__ ~ "::libraries-content" label="City:"|_ value=record.city  %}
+				{% partial __SELF__ ~ "::libraries-content" label="Pages:"|_ value=record.pages  %}
+				<br>{% partial __SELF__ ~ "::libraries-content" label="URL/DOI:"|_ value=record.doi is_link=true  %}
+
 			</div>
 		</div>
 		{%if record.file %}
 			<div class="col-md-3 col-xs-12">
                 {% if __SELF__.property('redirect_to_download_page') %}
-                <a target="_blank" href="{{ 'file-download'|page({'id': record.file.id}) }}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>Download  ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
+                <a target="_blank" href="{{ 'file-download'|page({'id': record.file.id}) }}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>{{'Download' |_}}  ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
                 {% else %}
-                <a target="_blank" href="{{record.file.path()}}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>Download  ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
+                <a target="_blank" href="{{record.file.path()}}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>{{'Download' |_}}  ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
+
                 {% endif %}
 			</div>
 		{%endif%}

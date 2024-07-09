@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     function toggleClearButtonVisibility() {
         if ($('.form-control.search').val()) {

@@ -10,13 +10,15 @@ fields:
             1: 'Journal Paper'
             2: 'Proceedings Paper'
             3: 'Book Chapter'
-            4: Book
-            5: Deliverable
-            6: Report
-            7: Video
-            8: Presentation
-            9: Other
-            10: Pledges
+            4: 'Book'
+            5: 'Deliverable'
+            6: 'Report'
+            7: 'Video'
+            8: 'Presentation'
+            9: 'Other'
+            10: 'Pledges'
+            11: 'Milestone'
+            12: 'Feature'
         showSearch: true
         span: auto
         default: '1'
@@ -97,7 +99,7 @@ fields:
         disabled: 0
         type: switch
     monograph_title:
-        label: 'Monograph Title'
+        label: 'Monograph Titl}'
         span: left
         trigger:
             action: show
