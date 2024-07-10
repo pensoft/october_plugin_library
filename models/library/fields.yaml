@@ -19,6 +19,7 @@ fields:
             10: 'Pledges'
             11: 'Milestone'
             12: 'Feature'
+            13: 'Technical brief'
         showSearch: true
         span: auto
         default: '1'

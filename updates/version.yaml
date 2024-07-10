@@ -79,4 +79,5 @@
     - 'Fix detach'
 1.1.3:
     - 'Fix dwn button'
-    
+1.1.4:
+    - 'Updated fields.yaml'
