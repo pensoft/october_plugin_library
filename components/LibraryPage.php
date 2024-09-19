@@ -132,7 +132,7 @@ class LibraryPage extends ComponentBase
     protected function getRequestOptions()
     {
         $type = request()->get('type', '0');
-        $defaultSort = $type == '1' ? 'title asc' : 'year desc';
+        $defaultSort = ($type == '1' || $type == '4') ? 'title asc' : 'year desc';
 
         return request()->only(['page', 'perPage', 'search']) + [
             'page' => '1',

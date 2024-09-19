@@ -23,7 +23,7 @@ $(document).ready(function() {
         $('input[name="type"]').val(type);
 
         // Adjust sort value based on the type.
-        if(type == '1') {
+        if(type == '1' || type == '4') {
             // If type is 1, set sort to 'title asc'.
             $('#sortSelect').val('title asc');
         } else {
