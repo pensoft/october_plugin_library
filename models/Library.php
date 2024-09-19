@@ -292,8 +292,9 @@ class Library extends Model
         switch ($type) {
             case self::SORT_TYPE_DELIVERABLES:
                 return $query->ofType(self::TYPE_DELIVERABLE);
-            case self::SORT_TYPE_MILESTONES:
-                return $query->ofType(self::TYPE_MILESTONE);
+            case self::SORT_TYPE_MILESTONES: //Deliverables & Milestones
+                return $query->where('type', self::TYPE_DELIVERABLE)
+                    ->orWhere('type', self::TYPE_MILESTONE);
             case self::SORT_TYPE_FEATURES:
                 return $query->ofType(self::TYPE_FEATURE);
             case self::SORT_TYPE_TECHNICAL_BRIEFS:

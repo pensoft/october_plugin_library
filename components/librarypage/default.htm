@@ -14,12 +14,14 @@
     <form method="GET" id="typeForm" action="">
         <div class="tabs" id="mylibraryForm">
             <a data-type="0" {% if currentType == 0 %} class="active"{% else %} {% endif%}>{{'All documents' |_}}</a>
+            {% if __SELF__.property('milestones_filter') %}
+            <a data-type="4" {% if currentType == 4 %} class="active"{% else %} {% endif%}>{{'Deliverables & Milestones' |_}}</a>
+            {% else %}
             <a data-type="1" {% if currentType == 1 %} class="active"{% else %} {% endif%}>{{'Deliverables' |_}}</a>
+            {% endif %}
             <a data-type="2" {% if currentType == 2 %} class="active"{% else %} {% endif%}>{{'Relevant Publications' |_}}</a>
             <a data-type="3" {% if currentType == 3 %} class="active"{% else %} {% endif%}>{{themeName}} {{'Publications' |_}}</a>
-            {% if __SELF__.property('milestones_filter') %}
-            <a data-type="4" {% if currentType == 4 %} class="active"{% else %} {% endif%}>{{'Milestones' |_}}</a>
-            {% endif %}
+
             {% if __SELF__.property('features_filter') %}
             <a data-type="5" {% if currentType == 5 %} class="active"{% else %} {% endif%}>{{themeName}} {{'Features' |_}}</a>
             {% endif %}
