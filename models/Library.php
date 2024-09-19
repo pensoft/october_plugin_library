@@ -252,7 +252,7 @@ class Library extends Model
     public function scopeDefaultSort()
     {
         $options = request()->only(['type']);
-        return (!empty($options['type']) && $options['type'] == 1) ? 'title asc' : 'year desc';
+        return (!empty($options['type']) && ($options['type'] == 1 || $options['type'] == 4)) ? 'title asc' : 'year desc';
     }
 
     /**
