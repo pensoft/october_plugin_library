@@ -301,10 +301,12 @@ class Library extends Model
                 return $query->ofType(self::TYPE_TECHNICAL_BRIEF);
             case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
                 return $query->where('type', '!=', self::TYPE_DELIVERABLE)
+                    ->where('type', '!=', self::TYPE_MILESTONE)
                     ->where('type', '!=', self::TYPE_FEATURE)
                     ->where('derived', self::DERIVED_NO);
             case self::SORT_TYPE_PROJECT_PUBLICATIONS:
                 return $query->where('type', '!=', self::TYPE_DELIVERABLE)
+                    ->where('type', '!=', self::TYPE_MILESTONE)
                     ->where('type', '!=', self::TYPE_FEATURE)
                     ->where('derived', self::DERIVED_YES);
             case "0":
