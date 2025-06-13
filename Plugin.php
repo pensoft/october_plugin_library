@@ -29,4 +29,26 @@ class Plugin extends PluginBase
         ];
     }
 
+    public function registerPermissions()
+    {
+        return [
+            'pensoft.library.access' => [
+                'tab' => 'Library',
+                'label' => 'Manage library'
+            ],
+        ];
+    }
+
+    public function registerNavigation()
+    {
+        return [
+            'main-menu-item' => [
+                'label'       => 'Library',
+                'url'         => \Backend::url('pensoft/library/library'),
+                'icon'        => 'icon-book',
+                'permissions' => ['pensoft.library.*'],
+            ],
+        ];
+    }
+
 }
