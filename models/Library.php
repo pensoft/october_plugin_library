@@ -344,6 +344,28 @@ class Library extends Model
         });
     }
 
+    public function scopeSearchTerms($query, $searchTerms)
+    {
+        if (!empty($searchTerms) && is_array($searchTerms)) {
+            foreach ($searchTerms as $term) {
+                $query->orWhere('title', 'ILIKE', "%{$term}%");
+                $query->orWhere('authors', 'ILIKE', "%{$term}%");
+                $query->orWhere('journal_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('proceedings_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('monograph_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('deliverable_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('project_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('publisher', 'ILIKE', "%{$term}%");
+                $query->orWhere('place', 'ILIKE', "%{$term}%");
+                $query->orWhere('doi', 'ILIKE', "%{$term}%");
+                $query->orWhere('city', 'ILIKE', "%{$term}%");
+                $query->orWhere('description', 'ILIKE', "%{$term}%");
+                $query->orWhere('keywords', 'ILIKE', "%{$term}%");
+            }
+        }
+        return $query;
+    }
+
     /**
      * Add translation support to this model, if available.
      *
