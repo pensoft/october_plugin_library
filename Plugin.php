@@ -4,6 +4,7 @@
 use System\Classes\PluginBase;
 use Pensoft\Library\Components\Library;
 use Pensoft\Library\Components\LibraryPage;
+use Pensoft\Library\Components\LibraryHandler;
 use SaurabhDhariwal\Revisionhistory\Classes\Diff as Diff;
 use System\Models\Revision as Revision;
 
@@ -26,6 +27,7 @@ class Plugin extends PluginBase
         return [
             Library::class => 'library',
             LibraryPage::class => 'LibraryPage',
+            LibraryHandler::class => 'LibraryHandler',
         ];
     }
 

@@ -108,6 +108,14 @@ fields:
             condition: 'value[3]'
         type: text
     deliverable_title:
+        label: 'Deliverable Title'
+        span: left
+        trigger:
+            action: show
+            field: type
+            condition: 'value[5]'
+        type: text
+    deliverable_number:
         label: 'Deliverable Number'
         span: left
         trigger:

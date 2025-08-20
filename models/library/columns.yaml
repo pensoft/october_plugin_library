@@ -26,6 +26,11 @@ columns:
     doi:
         label: doi
         type: text
+    deliverable_number:
+        label: 'Deliverable Number'
+        type: text
+        searchable: true
+        sortable: true
     created_at:
         label: created_at
         type: datetime

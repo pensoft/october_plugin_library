@@ -95,3 +95,6 @@
     - 'Permissions'
 1.1.11:
     - 'Selectize'
+1.1.12:
+    - 'AJAX Library Handler Component, Added deliverable_number field to library records'
+    - update_table_pensoft_library_records_3.php
