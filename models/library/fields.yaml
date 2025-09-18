@@ -123,6 +123,14 @@ fields:
             field: type
             condition: 'value[5]'
         type: text
+    milestone_number:
+        label: 'Milestone Number'
+        span: left
+        trigger:
+            action: show
+            field: type
+            condition: 'value[11]'
+        type: text
     project_title:
         label: 'Project Title'
         span: left

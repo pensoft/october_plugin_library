@@ -74,7 +74,8 @@ class Library extends Model
         'place',
         'city',
         'pages',
-        'doi'
+        'doi',
+        'milestone_number'
     ];
 
     public static $allowSortTypesOptions = [
