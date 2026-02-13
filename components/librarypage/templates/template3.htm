@@ -21,7 +21,8 @@
 				{% partial __SELF__ ~ "::libraries-content" label="Journal:"|_ value=record.journal_title %}
 				{% partial __SELF__ ~ "::libraries-content" label="Proceedings:"|_ value=record.proceedings_title %}
 				{% partial __SELF__ ~ "::libraries-content" label="Monograph:"|_ value=record.monograph_title %}
-				{% partial __SELF__ ~ "::libraries-content" label="Deliverable number:"|_ value=record.deliverable_title %}
+				{% partial __SELF__ ~ "::libraries-content" label="Deliverable title:"|_ value=record.deliverable_title %}
+				{% partial __SELF__ ~ "::libraries-content" label="Deliverable number:"|_ value=record.deliverable_number %}
 				{% partial __SELF__ ~ "::libraries-content" label="Project:"|_ value=record.project_title %}
 
 				{% partial __SELF__ ~ "::libraries-content" label="Volume/Issue:"|_ value=record.volume_issue %}
