@@ -1,0 +1,117 @@
+1.0.1:
+    - 'Initialize plugin.'
+1.0.2:
+    - 'Created table pensoft_library_records'
+    - builder_table_create_pensoft_library_records.php
+1.0.3:
+    - 'New message when no documents are added'
+1.0.4:
+    - 'Publication year'
+1.0.5:
+    - 'Publication year and sort options'
+1.0.6:
+    - 'New template'
+1.0.7:
+    - 'No records found message'
+1.0.8:
+    - 'New template 4'
+1.0.9:
+    - 'New library types - video, presentation, other'
+1.0.10:
+    - 'New library type - Pledges '
+1.0.11:
+    - 'New template 5 and edit link'
+1.0.12:
+    - 'Fixed template 3'
+1.0.13:
+    - 'Updated table pensoft_library_records'
+    - builder_table_update_pensoft_library_records.php
+1.0.14:
+    - 'Fixed template 4'
+1.0.15:
+    - 'Add file name to open pdf link'
+1.0.16:
+    - 'Fixed template 5'
+1.0.17:
+    - 'Fixed types labes'
+1.0.18:
+    - 'Template 6'
+1.0.19:
+    - 'Download via download-file page'
+1.0.20:
+    - 'Revision history'
+1.0.21:
+    - 'Revision history revisionable params'
+1.0.22:
+    - 'Filter, sort, search fix'
+1.0.23:
+    - 'Fixed search and order'
+1.0.24:
+    - 'Fixed deliverables order'
+1.0.25:
+    - 'Fixed serach, sort, folter, paging'
+1.0.26:
+    - 'Removed download all btn'
+1.0.27:
+    - 'FIxed download'
+1.0.28:
+    - 'FIxed tab active state'
+1.0.29:
+    - 'FIxed tab active state'
+1.0.30:
+    - 'Added default sort, updated forms, modified logic'
+1.0.31:
+    - 'Added milestones'
+1.0.32:
+    - 'Fix'
+1.0.33:
+    - 'Translate'
+1.0.34:
+    - 'Pagination logic FIX'
+1.0.35:
+    - 'Add features filter'
+1.1.0:
+    - 'Migration fixes'
+1.1.1:
+    - 'Updated table pensoft_library_records'
+    - builder_table_update_pensoft_library_records_2.php
+1.1.2:
+    - 'Fix detach'
+1.1.3:
+    - 'Fix dwn button'
+1.1.4:
+    - 'Updated fields.yaml'
+1.1.5:
+    - 'Template 7'
+1.1.6:
+    - 'Combine Deliverables and Milestones'
+1.1.7:
+    - 'Fixed sort Deliverables and Milestones'
+1.1.8:
+    - 'Fixed sort Deliverables and Milestones'
+1.1.9:
+    - 'Fixed sort Deliverables and Milestones'
+1.1.10:
+    - 'Permissions'
+1.1.11:
+    - 'Selectize'
+1.1.12:
+    - 'AJAX Library Handler Component, Added deliverable_number field to library records'
+    - update_table_pensoft_library_records_3.php
+1.1.13:
+    - 'Download all button route'
+1.1.14:
+    - 'Added milestone_number field to library records'
+    - update_table_pensoft_library_records_4.php
+1.1.15:
+    - 'Deliverables title and number TEMPLATE 3'
+
+4.0.1:
+  - 'Migrated to OctoberCMS 4 and PHP 8.2'
+4.0.2:
+    - 'Created library types table with seeded values'
+    - create_library_types_table.php
+4.0.3:
+    - 'Created library statuses table with seeded values'
+    - create_library_statuses_table.php
+

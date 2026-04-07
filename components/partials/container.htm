@@ -1,0 +1,33 @@
+{% for record in __SELF__.records %}
+<div class="library-container">
+    <h2>{{ record.title }}</h2>
+    {% partial "@content" label="Authors:"|_ value=record.authors %}
+    {% partial "@content" label="Status:"|_ value=record.status %}
+    {% partial "@content" label="Year:"|_ value=record.year %}
+
+    {% partial "@content" label="Journal:"|_ value=record.journal %}
+    {% partial "@content" label="Proceedings:"|_ value=record.proceedings_title %}
+    {% partial "@content" label="Journal:"|_ value=record.monograph_title %}
+    {% partial "@content" label="Journal:"|_ value=record.deliverable_title %}
+    {% partial "@content" label="Journal:"|_ value=record.project_title %}
+
+    {% partial "@content" label="Volume/Issue:"|_ value=record.volume_issue %}
+    {% partial "@content" label="Publisher:"|_ value=record.publisher  %}
+    {% partial "@content" label="Place:"|_ value=record.place  %}
+    {% partial "@content" label="City:"|_ value=record.city  %}
+    {% partial "@content" label="Pages:"|_ value=record.pages  %}
+    {% partial "@content" label="URL/DOI:"|_ value=record.doi  %}
+
+    {%if record.file%}
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="mt-1 d-flex justify-content-between align-items-center">
+                <a target="_blank" href="{{record.file.path()}}" class="btn btn-secondary">{{'Download' |_}} </a>
+                <span> ({{record.filesize}})</span>
+            </div>
+        </div>
+    </div>
+    {%endif%}
+
+</div>
+{% endfor %}

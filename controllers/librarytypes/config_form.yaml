@@ -1,0 +1,10 @@
+name: Library Type
+form: $/pensoft/library/models/librarytype/fields.yaml
+modelClass: Pensoft\Library\Models\LibraryType
+defaultRedirect: pensoft/library/librarytypes
+create:
+    redirect: 'pensoft/library/librarytypes/update/:id'
+    redirectClose: pensoft/library/librarytypes
+update:
+    redirect: pensoft/library/librarytypes
+    redirectClose: pensoft/library/librarytypes

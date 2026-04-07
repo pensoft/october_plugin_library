@@ -1,0 +1,10 @@
+name: Library Status
+form: $/pensoft/library/models/librarystatus/fields.yaml
+modelClass: Pensoft\Library\Models\LibraryStatus
+defaultRedirect: pensoft/library/librarystatuses
+create:
+    redirect: 'pensoft/library/librarystatuses/update/:id'
+    redirectClose: pensoft/library/librarystatuses
+update:
+    redirect: pensoft/library/librarystatuses
+    redirectClose: pensoft/library/librarystatuses

@@ -1,0 +1,5 @@
+title: Library Statuses
+nameFrom: name
+modelClass: Pensoft\Library\Models\LibraryStatus
+toolbar:
+    buttons: reorder_toolbar

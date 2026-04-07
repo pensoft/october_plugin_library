@@ -1,0 +1,5 @@
+title: Library Types
+nameFrom: name
+modelClass: Pensoft\Library\Models\LibraryType
+toolbar:
+    buttons: reorder_toolbar

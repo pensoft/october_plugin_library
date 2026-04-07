@@ -1,0 +1,12 @@
+list: $/pensoft/library/models/librarystatus/columns.yaml
+modelClass: Pensoft\Library\Models\LibraryStatus
+title: Library Statuses
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'pensoft/library/librarystatuses/update/:id'
