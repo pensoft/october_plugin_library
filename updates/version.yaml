@@ -114,4 +114,6 @@
 4.0.3:
     - 'Created library statuses table with seeded values'
     - create_library_statuses_table.php
+4.0.4:
+    - 'composer installers 1 and 2'
 
