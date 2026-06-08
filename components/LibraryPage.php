@@ -2,6 +2,7 @@
 
 namespace Pensoft\Library\Components;
 
+use Carbon\Carbon;
 use Cms\Classes\Theme;
 use Backend\Facades\BackendAuth;
 use \Cms\Classes\ComponentBase;
@@ -71,6 +72,16 @@ class LibraryPage extends ComponentBase
                 'type' => 'checkbox',
                 'default' => false
             ],
+            'features_filter' => [
+                'title' => 'Enable and disable features filtration',
+                'type' => 'checkbox',
+                'default' => false
+            ],
+            'technical_briefs_filter' => [
+                'title' => 'Enable and disable features technical briefs filtration',
+                'type' => 'checkbox',
+                'default' => false
+            ],
         ];
     }
 
@@ -83,6 +94,7 @@ class LibraryPage extends ComponentBase
             'template4' => 'Template 4',
             'template5' => 'Template 5',
             'template6' => 'Template 6',
+            'template7' => 'Template 7',
         ];
     }
 
@@ -93,7 +105,7 @@ class LibraryPage extends ComponentBase
             'description' => 'Displays a collection of libraries.'
         ];
     }
-    
+
     /**
      * Prepares the variables needed by the component's default.htm template.
      *
@@ -121,7 +133,7 @@ class LibraryPage extends ComponentBase
     protected function getRequestOptions()
     {
         $type = request()->get('type', '0');
-        $defaultSort = $type == '1' ? 'title asc' : 'year desc';
+        $defaultSort = ($type == '1' || $type == '4') ? 'title asc' : 'year desc';
 
         return request()->only(['page', 'perPage', 'search']) + [
             'page' => '1',
@@ -158,6 +170,7 @@ class LibraryPage extends ComponentBase
         return $query;
     }
 
+
     protected function setPageVariables($library, $options)
     {
         $this->page['sortOptions'] = Library::$allowSortingOptions;
@@ -193,5 +206,29 @@ class LibraryPage extends ComponentBase
     public function hasLibrary()
     {
         return Library::exists();
+    }
+
+
+    public function onSearchRecords() {
+        $sortType = post('sortType');
+        $sortOrder = post('sortOrder');
+        $this->page['records'] = $this->searchRecords($sortType, $sortOrder);
+        return ['#recordsContainer' => $this->renderPartial('library_records')];
+    }
+
+    protected function searchRecords(
+        $sortType = 0,
+        $sortOrder = 0
+    ) {
+
+        $result = Library::isVisible();
+        if($sortType){
+            $result->filterBy("{$sortType}");
+        }
+        if($sortOrder){
+            [$sortField, $sortDirection] = explode(' ', "{$sortOrder}", 2);
+            $result = $result->sortBy($sortField, $sortDirection)->orderBy('id', 'asc');
+        }
+        return $result->get();
     }
 }

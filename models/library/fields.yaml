@@ -18,6 +18,8 @@ fields:
             9: 'Other'
             10: 'Pledges'
             11: 'Milestone'
+            12: 'Feature'
+            13: 'Technical brief'
         showSearch: true
         span: auto
         default: '1'
@@ -106,12 +108,28 @@ fields:
             condition: 'value[3]'
         type: text
     deliverable_title:
+        label: 'Deliverable Title'
+        span: left
+        trigger:
+            action: show
+            field: type
+            condition: 'value[5]'
+        type: text
+    deliverable_number:
         label: 'Deliverable Number'
         span: left
         trigger:
             action: show
             field: type
             condition: 'value[5]'
+        type: text
+    milestone_number:
+        label: 'Milestone Number'
+        span: left
+        trigger:
+            action: show
+            field: type
+            condition: 'value[11]'
         type: text
     project_title:
         label: 'Project Title'
@@ -174,3 +192,13 @@ fields:
             extension: auto
         span: auto
         type: fileupload
+    keywords:
+        label: Keywords
+        type: textarea
+        size: large
+        span: auto
+    description:
+        label: Description
+        type: textarea
+        size: large
+        span: auto

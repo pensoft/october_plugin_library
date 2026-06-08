@@ -33,12 +33,17 @@ class Library extends Model
     const TYPE_OTHER = 9;
     const TYPE_PLEDGES = 10;
     const TYPE_MILESTONE = 11;
+    const TYPE_FEATURE = 12;
+    const TYPE_TECHNICAL_BRIEF = 13;
 
     const SORT_TYPE_ALL = 0;
     const SORT_TYPE_DELIVERABLES = 1;
     const SORT_TYPE_RELEVANT_PUBLICATIONS = 2;
     const SORT_TYPE_PROJECT_PUBLICATIONS = 3;
     const SORT_TYPE_MILESTONES = 4;
+    const SORT_TYPE_FEATURES = 5;
+    const SORT_TYPE_TECHNICAL_BRIEFS = 6;
+
 
     // Add  for revisions limit
     public $revisionableLimit = 200;
@@ -69,28 +74,33 @@ class Library extends Model
         'place',
         'city',
         'pages',
-        'doi'
+        'doi',
+        'milestone_number'
     ];
 
     public static $allowSortTypesOptions = [
         self::SORT_TYPE_ALL => "All Documents",
-		self::SORT_TYPE_DELIVERABLES => 'Deliverables',
-		self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
-		self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
-        self::SORT_TYPE_MILESTONES => 'Milestones'
+        self::SORT_TYPE_DELIVERABLES => 'Deliverables',
+        self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
+        self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
+        self::SORT_TYPE_MILESTONES => 'Milestones',
+        self::SORT_TYPE_FEATURES => 'Features',
+        self::SORT_TYPE_TECHNICAL_BRIEFS => 'Technical briefs'
     ];
 
     public function getSortTypesOptions(){
         $activeTheme = Theme::getActiveTheme();
         $theme = $activeTheme->getConfig();
         return
-        [
-            self::SORT_TYPE_ALL => "All Documents",
-            self::SORT_TYPE_DELIVERABLES => 'Deliverables',
-            self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
-            self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
-            self::SORT_TYPE_MILESTONES => 'Milestones'
-        ];
+            [
+                self::SORT_TYPE_ALL => "All Documents",
+                self::SORT_TYPE_DELIVERABLES => 'Deliverables',
+                self::SORT_TYPE_RELEVANT_PUBLICATIONS => 'Relevant Publications',
+                self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
+                self::SORT_TYPE_MILESTONES => 'Milestones',
+                self::SORT_TYPE_FEATURES => 'Features',
+                self::SORT_TYPE_TECHNICAL_BRIEFS => 'Technical briefs'
+            ];
     }
 
     public function scopeThemeName(){
@@ -114,6 +124,7 @@ class Library extends Model
         'file' => 'System\Models\File',
         'preview' => 'System\Models\File',
     ];
+
     public $appends = [
         'status_attr',
         'derived_attr',
@@ -176,6 +187,12 @@ class Library extends Model
             case self::TYPE_MILESTONE:
                 return 'Milestone';
                 break;
+            case self::TYPE_FEATURE:
+                return 'Feature';
+                break;
+            case self::TYPE_TECHNICAL_BRIEF:
+                return 'Technical brief';
+                break;
         }
     }
 
@@ -236,7 +253,7 @@ class Library extends Model
     public function scopeDefaultSort()
     {
         $options = request()->only(['type']);
-        return (!empty($options['type']) && $options['type'] == 1) ? 'title asc' : 'year desc';
+        return (!empty($options['type']) && ($options['type'] == 1 || $options['type'] == 4)) ? 'title asc' : 'year desc';
     }
 
     /**
@@ -276,13 +293,22 @@ class Library extends Model
         switch ($type) {
             case self::SORT_TYPE_DELIVERABLES:
                 return $query->ofType(self::TYPE_DELIVERABLE);
-            case self::SORT_TYPE_MILESTONES:
-                return $query->ofType(self::TYPE_MILESTONE);
+            case self::SORT_TYPE_MILESTONES: //Deliverables & Milestones
+                return $query->where('type', self::TYPE_DELIVERABLE)
+                    ->orWhere('type', self::TYPE_MILESTONE);
+            case self::SORT_TYPE_FEATURES:
+                return $query->ofType(self::TYPE_FEATURE);
+            case self::SORT_TYPE_TECHNICAL_BRIEFS:
+                return $query->ofType(self::TYPE_TECHNICAL_BRIEF);
             case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
                 return $query->where('type', '!=', self::TYPE_DELIVERABLE)
+                    ->where('type', '!=', self::TYPE_MILESTONE)
+                    ->where('type', '!=', self::TYPE_FEATURE)
                     ->where('derived', self::DERIVED_NO);
             case self::SORT_TYPE_PROJECT_PUBLICATIONS:
                 return $query->where('type', '!=', self::TYPE_DELIVERABLE)
+                    ->where('type', '!=', self::TYPE_MILESTONE)
+                    ->where('type', '!=', self::TYPE_FEATURE)
                     ->where('derived', self::DERIVED_YES);
             case "0":
                 return $query;
@@ -313,8 +339,32 @@ class Library extends Model
                 ->orwhere('publisher', 'iLIKE', '%' . $searchTerm . '%')
                 ->orWhere('place', 'iLIKE', '%' . $searchTerm . '%')
                 ->orWhere('city', 'iLIKE', '%' . $searchTerm . '%')
-                ->orWhere('doi', 'iLIKE', '%' . $searchTerm . '%');
+                ->orWhere('doi', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('description', 'iLIKE', '%' . $searchTerm . '%')
+                ->orWhere('keywords', 'iLIKE', '%' . $searchTerm . '%');
         });
+    }
+
+    public function scopeSearchTerms($query, $searchTerms)
+    {
+        if (!empty($searchTerms) && is_array($searchTerms)) {
+            foreach ($searchTerms as $term) {
+                $query->orWhere('title', 'ILIKE', "%{$term}%");
+                $query->orWhere('authors', 'ILIKE', "%{$term}%");
+                $query->orWhere('journal_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('proceedings_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('monograph_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('deliverable_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('project_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('publisher', 'ILIKE', "%{$term}%");
+                $query->orWhere('place', 'ILIKE', "%{$term}%");
+                $query->orWhere('doi', 'ILIKE', "%{$term}%");
+                $query->orWhere('city', 'ILIKE', "%{$term}%");
+                $query->orWhere('description', 'ILIKE', "%{$term}%");
+                $query->orWhere('keywords', 'ILIKE', "%{$term}%");
+            }
+        }
+        return $query;
     }
 
     /**
