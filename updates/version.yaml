@@ -68,3 +68,5 @@
     - 'Translate'
 1.0.34:
     - 'Pagination logic FIX'
+1.0.35:
+    - 'WCAG 2'
