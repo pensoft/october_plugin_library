@@ -190,7 +190,7 @@ class Library extends Model
                 return 'Feature';
                 break;
             case self::TYPE_TECHNICAL_BRIEF:
-                return 'Technical brief';
+                return 'Policy brief';
                 break;
         }
     }
