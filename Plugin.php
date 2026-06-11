@@ -4,6 +4,7 @@
 use System\Classes\PluginBase;
 use Pensoft\Library\Components\Library;
 use Pensoft\Library\Components\LibraryPage;
+use Pensoft\Library\Components\LibraryHandler;
 use SaurabhDhariwal\Revisionhistory\Classes\Diff as Diff;
 use System\Models\Revision as Revision;
 
@@ -26,6 +27,29 @@ class Plugin extends PluginBase
         return [
             Library::class => 'library',
             LibraryPage::class => 'LibraryPage',
+            LibraryHandler::class => 'LibraryHandler',
+        ];
+    }
+
+    public function registerPermissions()
+    {
+        return [
+            'pensoft.library.access' => [
+                'tab' => 'Library',
+                'label' => 'Manage library'
+            ],
+        ];
+    }
+
+    public function registerNavigation()
+    {
+        return [
+            'main-menu-item' => [
+                'label'       => 'Library',
+                'url'         => \Backend::url('pensoft/library/library'),
+                'icon'        => 'icon-book',
+                'permissions' => ['pensoft.library.*'],
+            ],
         ];
     }
 

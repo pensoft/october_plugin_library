@@ -25,7 +25,8 @@
 				{% partial __SELF__ ~ "::libraries-content" label="Journal:" value=record.journal_title %}
 				{% partial __SELF__ ~ "::libraries-content" label="Proceedings:" value=record.proceedings_title %}
 				{% partial __SELF__ ~ "::libraries-content" label="Monograph:" value=record.monograph_title %}
-				{% partial __SELF__ ~ "::libraries-content" label="Deliverable number:" value=record.deliverable_title %}
+                {% partial __SELF__ ~ "::libraries-content" label="Deliverable title:"|_ value=record.deliverable_title %}
+                {% partial __SELF__ ~ "::libraries-content" label="Deliverable number:"|_ value=record.deliverable_number %}
 				{% partial __SELF__ ~ "::libraries-content" label="Project:" value=record.project_title %}
 
 				{% partial __SELF__ ~ "::libraries-content" label="Volume/Issue:" value=record.volume_issue %}
@@ -34,7 +35,7 @@
 				{% partial __SELF__ ~ "::libraries-content" label="City:" value=record.city  %}
 				{% partial __SELF__ ~ "::libraries-content" label="Pages:" value=record.pages  %}
 				{% partial __SELF__ ~ "::libraries-content" label="URL/DOI:" value=record.doi is_link=true  %}
-                
+
 
                 {%if record.file %}
                     <a target="_blank" href="{{record.file.path}}{% if __SELF__.property('add_file_name') %}#file_name={{record.file.file_name}}{% endif %}" class="btn btn-primary dwn-button">
@@ -42,7 +43,7 @@
 						<i class="pr normal p-download"></i>
                     </a>
                 {%endif%}
-                
+
 			</div>
 		</div>
 	</div>

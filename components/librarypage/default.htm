@@ -53,10 +53,13 @@
             {% if __SELF__.property('has_search') %}
             <div id="searchLibrary" class="searchLibrary">
                 <div class="input-group align-items-start">
-                    <input class="form-control search" name="search" type="text" autocomplete="on"
+                    <label for="library-search-input" class="sr-only">Search in documents</label>
+                    <input id="library-search-input" class="form-control search" name="search" type="text" autocomplete="on"
                         placeholder="Search in documents" value="{{searchQuery}}">
-                    <button id="clearBtn" class="btn btn-reset btn-link text-grey-search-btn" type="button" title="clear search">&#x2715</button>
-                    <button class="btn searchLibrary btn-link text-grey-search-btn" type="submit"></button>
+                    {# aria-label is the accessible name; title alone was insufficient for NVDA browse mode (audit P-14). #}
+                    <button id="clearBtn" class="btn btn-reset btn-link text-grey-search-btn" type="button" aria-label="Clear search"><span aria-hidden="true">&#x2715;</span></button>
+                    {# Submit button is icon-only; aria-label provides the accessible name (audit P-13). #}
+                    <button class="btn searchLibrary btn-link text-grey-search-btn" type="submit" aria-label="Search"><span class="sr-only">Search</span></button>
                 </div>
             </div>
         </div>

@@ -2,6 +2,7 @@
 
 namespace Pensoft\Library\Components;
 
+use Carbon\Carbon;
 use Cms\Classes\Theme;
 use Backend\Facades\BackendAuth;
 use \Cms\Classes\ComponentBase;
@@ -205,5 +206,29 @@ class LibraryPage extends ComponentBase
     public function hasLibrary()
     {
         return Library::exists();
+    }
+
+
+    public function onSearchRecords() {
+        $sortType = post('sortType');
+        $sortOrder = post('sortOrder');
+        $this->page['records'] = $this->searchRecords($sortType, $sortOrder);
+        return ['#recordsContainer' => $this->renderPartial('library_records')];
+    }
+
+    protected function searchRecords(
+        $sortType = 0,
+        $sortOrder = 0
+    ) {
+
+        $result = Library::isVisible();
+        if($sortType){
+            $result->filterBy("{$sortType}");
+        }
+        if($sortOrder){
+            [$sortField, $sortDirection] = explode(' ', "{$sortOrder}", 2);
+            $result = $result->sortBy($sortField, $sortDirection)->orderBy('id', 'asc');
+        }
+        return $result->get();
     }
 }
