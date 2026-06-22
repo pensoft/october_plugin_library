@@ -304,11 +304,13 @@ class Library extends Model
                 return $query->where('type', '!=', self::TYPE_DELIVERABLE)
                     ->where('type', '!=', self::TYPE_MILESTONE)
                     ->where('type', '!=', self::TYPE_FEATURE)
+                    ->where('type', '!=', self::TYPE_TECHNICAL_BRIEF)
                     ->where('derived', self::DERIVED_NO);
             case self::SORT_TYPE_PROJECT_PUBLICATIONS:
                 return $query->where('type', '!=', self::TYPE_DELIVERABLE)
                     ->where('type', '!=', self::TYPE_MILESTONE)
                     ->where('type', '!=', self::TYPE_FEATURE)
+                    ->where('type', '!=', self::TYPE_TECHNICAL_BRIEF)
                     ->where('derived', self::DERIVED_YES);
             case "0":
                 return $query;

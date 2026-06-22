@@ -111,3 +111,5 @@
     - 'WCAG 2'
 1.1.18:
     - 'Technical brief -> Policy brief; '
+1.1.19:
+    - 'Exclude Policy briefs from Relevant filter'
