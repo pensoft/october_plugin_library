@@ -19,7 +19,8 @@ fields:
             10: 'Pledges'
             11: 'Milestone'
             12: 'Feature'
-            13: 'Technical brief'
+            13: 'Policy brief'
+            14: 'Graphical summary'
         showSearch: true
         span: auto
         default: '1'
