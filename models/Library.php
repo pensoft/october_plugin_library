@@ -76,7 +76,8 @@ class Library extends Model
         'place',
         'city',
         'pages',
-        'doi'
+        'doi',
+        'milestone_number'
     ];
 
     public static $allowSortTypesOptions = [
@@ -194,7 +195,7 @@ class Library extends Model
                 return 'Feature';
                 break;
             case self::TYPE_TECHNICAL_BRIEF:
-                return 'Technical brief';
+                return 'Policy brief';
                 break;
             case self::TYPE_GRAPHICAL_SUMMARIES:
                 return 'Graphical summary';
@@ -355,6 +356,28 @@ class Library extends Model
                 ->orWhere('description', 'iLIKE', '%' . $searchTerm . '%')
                 ->orWhere('keywords', 'iLIKE', '%' . $searchTerm . '%');
         });
+    }
+
+    public function scopeSearchTerms($query, $searchTerms)
+    {
+        if (!empty($searchTerms) && is_array($searchTerms)) {
+            foreach ($searchTerms as $term) {
+                $query->orWhere('title', 'ILIKE', "%{$term}%");
+                $query->orWhere('authors', 'ILIKE', "%{$term}%");
+                $query->orWhere('journal_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('proceedings_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('monograph_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('deliverable_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('project_title', 'ILIKE', "%{$term}%");
+                $query->orWhere('publisher', 'ILIKE', "%{$term}%");
+                $query->orWhere('place', 'ILIKE', "%{$term}%");
+                $query->orWhere('doi', 'ILIKE', "%{$term}%");
+                $query->orWhere('city', 'ILIKE', "%{$term}%");
+                $query->orWhere('description', 'ILIKE', "%{$term}%");
+                $query->orWhere('keywords', 'ILIKE', "%{$term}%");
+            }
+        }
+        return $query;
     }
 
     /**

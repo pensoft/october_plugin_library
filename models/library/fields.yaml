@@ -84,7 +84,7 @@ fields:
         trigger:
             action: hide
             field: type
-            condition: 'value[5]'
+            condition: 'value[5],value[13]'
         type: dropdown
     proceedings_title:
         label: 'Proceedings Title'
@@ -109,12 +109,28 @@ fields:
             condition: 'value[3]'
         type: text
     deliverable_title:
+        label: 'Deliverable Title'
+        span: left
+        trigger:
+            action: show
+            field: type
+            condition: 'value[5]'
+        type: text
+    deliverable_number:
         label: 'Deliverable Number'
         span: left
         trigger:
             action: show
             field: type
             condition: 'value[5]'
+        type: text
+    milestone_number:
+        label: 'Milestone Number'
+        span: left
+        trigger:
+            action: show
+            field: type
+            condition: 'value[11]'
         type: text
     project_title:
         label: 'Project Title'
