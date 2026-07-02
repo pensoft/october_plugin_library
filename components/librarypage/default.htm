@@ -30,6 +30,9 @@
             {% if __SELF__.property('technical_briefs_filter') %}
             <a data-type="6" {% if currentType == 6 %} class="active"{% else %} {% endif%}>{{'Technical briefs' |_}}</a>
             {% endif %}
+            {% if __SELF__.property('graphical_summaries_filter') %}
+            <a data-type="7" {% if currentType == 7 %} class="active"{% else %} {% endif%}>{{'Graphical summaries' |_}}</a>
+            {% endif %}
         </div>
         <input type="hidden" name="type" id="typeInput" value="{{ currentType }}">
 

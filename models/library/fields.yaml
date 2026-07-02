@@ -19,7 +19,8 @@ fields:
             10: 'Pledges'
             11: 'Milestone'
             12: 'Feature'
-            13: 'Technical brief'
+            13: 'Policy brief'
+            14: 'Graphical summary'
         showSearch: true
         span: auto
         default: '1'
@@ -83,7 +84,7 @@ fields:
         trigger:
             action: hide
             field: type
-            condition: 'value[5]'
+            condition: 'value[5],value[13]'
         type: dropdown
     proceedings_title:
         label: 'Proceedings Title'

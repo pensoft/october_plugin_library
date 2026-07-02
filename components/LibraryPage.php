@@ -82,6 +82,11 @@ class LibraryPage extends ComponentBase
                 'type' => 'checkbox',
                 'default' => false
             ],
+            'graphical_summaries_filter' => [
+                'title' => 'Enable and disable graphical summaries filtration',
+                'type' => 'checkbox',
+                'default' => false
+            ],
         ];
     }
 
