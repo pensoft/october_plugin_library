@@ -53,7 +53,7 @@
 
 		{%if record.file %}
 		<div class="col-xs-12 col-md-3 end-xs end-md">
-			<span class="download_text">{{'Download' |_}}</span> <a target="_blank" href="{{record.file.path}}{% if __SELF__.property('add_file_name') %}#file_name={{record.file.file_name}}{% endif %}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>{{'Download' |_}} ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
+			<span class="download_text">{{'Download' |_}}</span> <a href="{{ download_url(record.file, record) }}" download="{{ download_name(record.file, record) }}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>{{'Download' |_}} ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
 		</div>
 		{%endif%}
 	</div>

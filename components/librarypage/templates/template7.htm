@@ -37,7 +37,7 @@
                 
 
                 {%if record.file %}
-                    <a target="_blank" href="{{record.file.path}}{% if __SELF__.property('add_file_name') %}#file_name={{record.file.file_name}}{% endif %}" class="btn btn-primary dwn-button">
+                    <a href="{{ download_url(record.file, record) }}" download="{{ download_name(record.file, record) }}" class="btn btn-primary dwn-button">
                         <p>Download</p>
 						<i class="pr normal p-download"></i>
                     </a>

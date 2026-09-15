@@ -5,6 +5,7 @@ use System\Classes\PluginBase;
 use Pensoft\Library\Components\Library;
 use Pensoft\Library\Components\LibraryPage;
 use Pensoft\Library\Components\LibraryHandler;
+use Pensoft\Library\Classes\DownloadLink;
 use SaurabhDhariwal\Revisionhistory\Classes\Diff as Diff;
 use System\Models\Revision as Revision;
 
@@ -22,6 +23,17 @@ class Plugin extends PluginBase
             });
         });
     }
+    public function registerMarkupTags()
+    {
+        return [
+            'functions' => [
+                // Friendly download link + original file name for an attached file
+                'download_url' => [DownloadLink::class, 'url'],
+                'download_name' => [DownloadLink::class, 'name'],
+            ],
+        ];
+    }
+
     public function registerComponents()
     {
         return [

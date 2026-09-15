@@ -3,6 +3,19 @@
 use Illuminate\Support\Facades\Route;
 use Pensoft\Library\Models\Library;
 use Pensoft\Library\Classes\ZipFiles;
+use Pensoft\Library\Classes\DownloadLink;
+
+/*
+|--------------------------------------------------------------------------
+| Friendly single-file download route
+|--------------------------------------------------------------------------
+| /download/<file id>/<slug of the original file name>.<ext>, sent with the
+| original file name. Allowed attachments: config download.models.
+*/
+
+Route::get(DownloadLink::prefix() . '/{id}/{name?}', function ($id, $name = null) {
+    return DownloadLink::response($id, $name);
+})->where(['id' => '[0-9]+', 'name' => '[^/]+'])->middleware('web');
 
 /*
 |--------------------------------------------------------------------------

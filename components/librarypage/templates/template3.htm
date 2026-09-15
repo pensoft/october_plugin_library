@@ -35,12 +35,7 @@
 		</div>
 		{%if record.file %}
 			<div class="col-md-3 col-xs-12">
-                {% if __SELF__.property('redirect_to_download_page') %}
-                <a target="_blank" href="{{ 'file-download'|page({'id': record.file.id}) }}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>{{'Download' |_}}  ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
-                {% else %}
-                <a target="_blank" href="{{record.file.path()}}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>{{'Download' |_}}  ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
-
-                {% endif %}
+                <a href="{{ download_url(record.file, record) }}" download="{{ download_name(record.file, record) }}" class="btn btn-primary no-margin"><i class="pr normal p-download"></i>{{'Download' |_}}  ({{(record.file.file_size / 1024 / 1024 )|round(2)}} MB)</a>
 			</div>
 		{%endif%}
 	</div>
