@@ -35,6 +35,7 @@ class Library extends Model
     const TYPE_MILESTONE = 11;
     const TYPE_FEATURE = 12;
     const TYPE_TECHNICAL_BRIEF = 13;
+    const TYPE_GRAPHICAL_SUMMARIES = 14;
 
     const SORT_TYPE_ALL = 0;
     const SORT_TYPE_DELIVERABLES = 1;
@@ -43,6 +44,7 @@ class Library extends Model
     const SORT_TYPE_MILESTONES = 4;
     const SORT_TYPE_FEATURES = 5;
     const SORT_TYPE_TECHNICAL_BRIEFS = 6;
+    const SORT_TYPE_GRAPHICAL_SUMMARIES = 7;
 
 
     // Add  for revisions limit
@@ -85,7 +87,8 @@ class Library extends Model
         self::SORT_TYPE_PROJECT_PUBLICATIONS =>  'Publications',
         self::SORT_TYPE_MILESTONES => 'Milestones',
         self::SORT_TYPE_FEATURES => 'Features',
-        self::SORT_TYPE_TECHNICAL_BRIEFS => 'Technical briefs'
+        self::SORT_TYPE_TECHNICAL_BRIEFS => 'Technical briefs',
+        self::SORT_TYPE_GRAPHICAL_SUMMARIES => 'Graphical summaries'
     ];
 
     public function getSortTypesOptions(){
@@ -99,7 +102,8 @@ class Library extends Model
                 self::SORT_TYPE_PROJECT_PUBLICATIONS =>  strtoupper($theme['name']).' Publications',
                 self::SORT_TYPE_MILESTONES => 'Milestones',
                 self::SORT_TYPE_FEATURES => 'Features',
-                self::SORT_TYPE_TECHNICAL_BRIEFS => 'Technical briefs'
+                self::SORT_TYPE_TECHNICAL_BRIEFS => 'Technical briefs',
+                self::SORT_TYPE_GRAPHICAL_SUMMARIES => 'Graphical summaries'
             ];
     }
 
@@ -191,7 +195,10 @@ class Library extends Model
                 return 'Feature';
                 break;
             case self::TYPE_TECHNICAL_BRIEF:
-                return 'Technical brief';
+                return 'Policy brief';
+                break;
+            case self::TYPE_GRAPHICAL_SUMMARIES:
+                return 'Graphical summary';
                 break;
         }
     }
@@ -300,15 +307,21 @@ class Library extends Model
                 return $query->ofType(self::TYPE_FEATURE);
             case self::SORT_TYPE_TECHNICAL_BRIEFS:
                 return $query->ofType(self::TYPE_TECHNICAL_BRIEF);
+            case self::SORT_TYPE_GRAPHICAL_SUMMARIES:
+                return $query->ofType(self::TYPE_GRAPHICAL_SUMMARIES);
             case self::SORT_TYPE_RELEVANT_PUBLICATIONS:
                 return $query->where('type', '!=', self::TYPE_DELIVERABLE)
                     ->where('type', '!=', self::TYPE_MILESTONE)
                     ->where('type', '!=', self::TYPE_FEATURE)
+                    ->where('type', '!=', self::TYPE_TECHNICAL_BRIEF)
+                    ->where('type', '!=', self::TYPE_GRAPHICAL_SUMMARIES)
                     ->where('derived', self::DERIVED_NO);
             case self::SORT_TYPE_PROJECT_PUBLICATIONS:
                 return $query->where('type', '!=', self::TYPE_DELIVERABLE)
                     ->where('type', '!=', self::TYPE_MILESTONE)
                     ->where('type', '!=', self::TYPE_FEATURE)
+                    ->where('type', '!=', self::TYPE_TECHNICAL_BRIEF)
+                    ->where('type', '!=', self::TYPE_GRAPHICAL_SUMMARIES)
                     ->where('derived', self::DERIVED_YES);
             case "0":
                 return $query;

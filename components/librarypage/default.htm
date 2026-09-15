@@ -1,7 +1,9 @@
 {% if total_file_size_bites %}
 <div class="row center-xs mb-1">
     <div class="col-xs">
-        {{ form_open({request: __SELF__ ~ '::onDownloadAll'}) }}
+        {# Unique accessible name so this form landmark is distinct from the filter
+           form and the injected widget form (audit, WCAG 1.3.1, landmark uniqueness). #}
+        {{ form_open({request: __SELF__ ~ '::onDownloadAll', 'aria-label': 'Download all publications'}) }}
 
         <button type="submit" href="#" class="btn btn-primary"><i class="pr normal p-download"></i> <span class="download_all">{{'Download all' |_}}</span> <span class="publications">{{'publications' |_}}</span> <span class="download_size">({{ (total_file_size / 1024 / 1024 )|round(2)}} MB)</span></button>
 
@@ -11,7 +13,7 @@
 {% endif %}
 
 {% if __SELF__.hasLibrary() %}
-    <form method="GET" id="typeForm" action="">
+    <form method="GET" id="typeForm" action="" aria-label="Filter and sort documents">
         <div class="tabs" id="mylibraryForm">
             <a data-type="0" {% if currentType == 0 %} class="active"{% else %} {% endif%}>{{'All documents' |_}}</a>
             {% if __SELF__.property('milestones_filter') %}
@@ -27,6 +29,9 @@
             {% endif %}
             {% if __SELF__.property('technical_briefs_filter') %}
             <a data-type="6" {% if currentType == 6 %} class="active"{% else %} {% endif%}>{{'Technical briefs' |_}}</a>
+            {% endif %}
+            {% if __SELF__.property('graphical_summaries_filter') %}
+            <a data-type="7" {% if currentType == 7 %} class="active"{% else %} {% endif%}>{{'Graphical summaries' |_}}</a>
             {% endif %}
         </div>
         <input type="hidden" name="type" id="typeInput" value="{{ currentType }}">
@@ -53,10 +58,13 @@
             {% if __SELF__.property('has_search') %}
             <div id="searchLibrary" class="searchLibrary">
                 <div class="input-group align-items-start">
-                    <input class="form-control search" name="search" type="text" autocomplete="on"
+                    <label for="library-search-input" class="sr-only">Search in documents</label>
+                    <input id="library-search-input" class="form-control search" name="search" type="text" autocomplete="on"
                         placeholder="Search in documents" value="{{searchQuery}}">
-                    <button id="clearBtn" class="btn btn-reset btn-link text-grey-search-btn" type="button" title="clear search">&#x2715</button>
-                    <button class="btn searchLibrary btn-link text-grey-search-btn" type="submit"></button>
+                    {# aria-label is the accessible name; title alone was insufficient for NVDA browse mode (audit P-14). #}
+                    <button id="clearBtn" class="btn btn-reset btn-link text-grey-search-btn" type="button" aria-label="Clear search"><span aria-hidden="true">&#x2715;</span></button>
+                    {# Submit button is icon-only; aria-label provides the accessible name (audit P-13). #}
+                    <button class="btn searchLibrary btn-link text-grey-search-btn" type="submit" aria-label="Search"><span class="sr-only">Search</span></button>
                 </div>
             </div>
         </div>
