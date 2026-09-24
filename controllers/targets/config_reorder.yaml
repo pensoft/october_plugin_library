@@ -1,0 +1,6 @@
+modelClass: Pensoft\Library\Models\Target
+orderColumn: sort_order
+title: 'Reorder target audiences'
+nameFrom: name
+toolbar:
+    buttons: reorder_toolbar

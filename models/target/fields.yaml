@@ -1,0 +1,14 @@
+fields:
+    name:
+        label: Name
+        span: left
+        required: 1
+        type: text
+    slug:
+        label: Slug
+        comment: 'Used in the frontend filter URL (?audience=...). Generated from the name when empty.'
+        span: right
+        preset:
+            field: name
+            type: slug
+        type: text

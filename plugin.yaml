@@ -9,3 +9,12 @@ navigation:
         label: Library
         url: pensoft/library/library
         icon: icon-book
+        sideMenu:
+            side-menu-records:
+                label: Records
+                url: pensoft/library/library
+                icon: icon-book
+            side-menu-targets:
+                label: 'Target audiences'
+                url: pensoft/library/targets
+                icon: icon-users

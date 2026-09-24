@@ -43,6 +43,22 @@ class Plugin extends PluginBase
         ];
     }
 
+    public function registerSettings()
+    {
+        return [
+            'settings' => [
+                'label'       => 'Library',
+                'description' => 'Frontend library options (Target audience filter)',
+                'category'    => 'Library',
+                'icon'        => 'icon-book',
+                'class'       => \Pensoft\Library\Models\Settings::class,
+                'order'       => 500,
+                'keywords'    => 'library target audience filter',
+                'permissions' => ['pensoft.library.access'],
+            ],
+        ];
+    }
+
     public function registerPermissions()
     {
         return [
@@ -61,6 +77,20 @@ class Plugin extends PluginBase
                 'url'         => \Backend::url('pensoft/library/library'),
                 'icon'        => 'icon-book',
                 'permissions' => ['pensoft.library.*'],
+                'sideMenu'    => [
+                    'side-menu-records' => [
+                        'label'       => 'Records',
+                        'url'         => \Backend::url('pensoft/library/library'),
+                        'icon'        => 'icon-book',
+                        'permissions' => ['pensoft.library.*'],
+                    ],
+                    'side-menu-targets' => [
+                        'label'       => 'Target audiences',
+                        'url'         => \Backend::url('pensoft/library/targets'),
+                        'icon'        => 'icon-users',
+                        'permissions' => ['pensoft.library.*'],
+                    ],
+                ],
             ],
         ];
     }

@@ -1,0 +1,10 @@
+name: 'Target audience'
+form: $/pensoft/library/models/target/fields.yaml
+modelClass: Pensoft\Library\Models\Target
+defaultRedirect: pensoft/library/targets
+create:
+    redirect: 'pensoft/library/targets/update/:id'
+    redirectClose: pensoft/library/targets
+update:
+    redirect: pensoft/library/targets
+    redirectClose: pensoft/library/targets

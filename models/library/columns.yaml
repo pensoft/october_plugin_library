@@ -12,6 +12,13 @@ columns:
         label: year
         type: text
         sortable: true
+    target:
+        label: 'Target audience'
+        type: text
+        relation: target
+        select: name
+        searchable: true
+        sortable: false
     volume_issue:
         label: volume_issue
         type: text

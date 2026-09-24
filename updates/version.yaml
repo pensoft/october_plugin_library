@@ -119,3 +119,6 @@
     - 'WCAG 2'
 1.1.22:
     - 'Download link rewrite'
+1.1.23:
+    - 'Target audience (belongsTo) with options editable in the backend'
+    - create_table_pensoft_library_targets.php

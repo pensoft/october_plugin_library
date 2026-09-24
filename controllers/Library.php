@@ -13,6 +13,6 @@ class Library extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Pensoft.Library', 'main-menu-item');
+        BackendMenu::setContext('Pensoft.Library', 'main-menu-item', 'side-menu-records');
     }
 }

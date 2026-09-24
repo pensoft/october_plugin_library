@@ -1,0 +1,22 @@
+columns:
+    name:
+        label: Name
+        type: text
+        searchable: true
+        sortable: true
+    slug:
+        label: Slug
+        type: text
+        searchable: true
+    records_count:
+        label: Records
+        type: number
+        relation: records
+        valueFrom: id
+        useRelationCount: true
+        sortable: false
+    sort_order:
+        label: Order
+        type: number
+        sortable: true
+        invisible: true

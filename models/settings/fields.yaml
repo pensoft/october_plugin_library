@@ -1,0 +1,6 @@
+fields:
+    show_target_filter:
+        label: 'Show "Target audience" filter'
+        comment: 'Adds the Target audience select to the frontend library filter form. Options are managed under Library > Target audiences.'
+        type: switch
+        default: false

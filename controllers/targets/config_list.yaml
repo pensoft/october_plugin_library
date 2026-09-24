@@ -1,0 +1,15 @@
+list: $/pensoft/library/models/target/columns.yaml
+modelClass: Pensoft\Library\Models\Target
+title: 'Target audiences'
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 50
+defaultSort:
+    column: sort_order
+    direction: asc
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'pensoft/library/targets/update/:id'

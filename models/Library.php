@@ -51,7 +51,7 @@ class Library extends Model
     public $revisionableLimit = 200;
 
     // Add for revisions on particular field
-    protected $revisionable = ["id", "title", "authors", "status", "year",];
+    protected $revisionable = ["id", "title", "authors", "status", "year", "target_id",];
 
     public static $allowSortingOptions = [
         'title asc' => 'Title (asc)',
@@ -127,6 +127,10 @@ class Library extends Model
     public $attachOne = [
         'file' => 'System\Models\File',
         'preview' => 'System\Models\File',
+    ];
+
+    public $belongsTo = [
+        'target' => [Target::class, 'key' => 'target_id'],
     ];
 
     public $appends = [
@@ -244,6 +248,22 @@ class Library extends Model
     public function scopeOfType($query, $type)
     {
         return $query->where('type', $type);
+    }
+
+    /**
+     * Scope to filter records by target audience (Target id or slug)
+     */
+    public function scopeForTarget($query, $target)
+    {
+        if ($target === null || $target === '') {
+            return $query;
+        }
+        if (is_numeric($target)) {
+            return $query->where('target_id', (int) $target);
+        }
+        return $query->whereHas('target', function ($q) use ($target) {
+            $q->where('slug', $target);
+        });
     }
 
     // Add below function use for get current user details

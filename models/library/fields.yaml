@@ -26,6 +26,13 @@ fields:
         default: '1'
         required: 1
         type: dropdown
+    target:
+        label: 'Target audience'
+        type: relation
+        nameFrom: name
+        emptyOption: '-- none --'
+        span: auto
+        comment: 'Options are managed under Library > Target audiences.'
     authors:
         label: Authors
         mode: string
